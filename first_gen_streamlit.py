@@ -53,7 +53,7 @@ if topic == 'First Gen Data':
         threshold = st.slider("Cutoff Number of Ints/Job Applications", 0, 10, 0)
         # Percent of Each Group
         internship_counts = anonymous_app_counts[anonymous_app_counts.Internship >= threshold]['First Gen'].value_counts().rename('Percent(\\%)')
-        int_porportions = 100 * (1 - round(internship_counts/total_counts, 2))
+        int_porportions = 100 * (1 - round(internship_counts.rename('\\%')/total_counts, 2))
         job_counts = anonymous_app_counts[anonymous_app_counts.Job >= threshold]['First Gen'].value_counts().rename('\\%')
         job_porportions = 100 * (1 - round(job_counts/total_counts, 2))
         # Ouputting Int/Job Tables for Percet Under Threshold
