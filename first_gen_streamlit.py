@@ -50,7 +50,7 @@ if topic == 'First Gen Data':
         # Threshold for number of Apps
         st.header("Students With less than threshold Handshake Application")
         threshold = 1 
-        internship_counts = anonymous_app_counts[anonymous_app_counts.Internship >= threshold]['First Gen'].value_counts().rename('%')
+        internship_counts = anonymous_app_counts[anonymous_app_counts.Internship >= threshold]['First Gen'].value_counts().rename('Percent(%)')
         int_porportions = 100 * (1 - round(internship_counts/total_counts, 2))
         
         col3, col4 = st.columns(2)
