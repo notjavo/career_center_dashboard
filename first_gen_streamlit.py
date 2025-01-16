@@ -63,7 +63,7 @@ if topic == 'First Gen Data':
         with col4:
             st.write(f"Percent < {threshold} job application(s):\n", job_porportions)
         st.write("")
-        st.slider('Threshold', 0, 10, 0, key='bottom_threshold') # User specified number of ints/jobs higher or less than
+        threshold = st.slider('Threshold', 0, 10, 0, key='bottom_threshold') 
 
 
     if subtopic == 'Internship Applications':
