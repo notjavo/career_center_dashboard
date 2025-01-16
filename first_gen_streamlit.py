@@ -15,7 +15,7 @@ topic = st.sidebar.selectbox(
 
 
 if topic == 'First Gen Data':
-    subtopic = st.selectbox("What Aspect of UVA 2024 First Data do you Want to see?", ["Overview", "Internship Applications", "Job Applications",]) 
+    subtopic = st.selectbox("What Aspect of UVA First Generation Data do you Want to see?", ["Overview", "Internship Applications", "Job Applications",]) 
 
     if subtopic == "Overview":
         # First Gen Data
