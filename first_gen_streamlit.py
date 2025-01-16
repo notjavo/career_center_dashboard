@@ -38,7 +38,7 @@ if topic == 'First Gen Data':
 
         # Looking at Counts and Proportions of First gen or Not
         st.write("")
-        st.write("UVA Students With Handshake Application and First Gen Data From 2021-2024")
+        st.subheader("UVA Students With Handshake Application and First Gen Data From 2021-2024")
         total_counts = anonymous_app_counts['First Gen'].value_counts().rename('Number of UVA students')
         total_proportions = anonymous_app_counts['First Gen'].value_counts(normalize=True).rename('Percent of UVA Students')
         col1, col2 = st.columns(2)
@@ -49,8 +49,10 @@ if topic == 'First Gen Data':
 
         # Threshold for number of Apps
         st.write("")
-        st.write("Students With less than threshold Handshake Application")
-        threshold = 1 # Initialize threshold
+        st.subheader("Students With less than threshold Handshake Application")
+        # Initialize threshold using a placeholder
+        threshold_placeholder = st.empty()
+        threshold = threshold_placeholder.slider('Threshold', 0, 10, 0) # User specified number of ints/jobs higher or less than
         # Percent of Each Group
         internship_counts = anonymous_app_counts[anonymous_app_counts.Internship >= threshold]['First Gen'].value_counts().rename('Percent(%)')
         int_porportions = 100 * (1 - round(internship_counts/total_counts, 2))
@@ -62,8 +64,9 @@ if topic == 'First Gen Data':
             st.write(f"Percent < {threshold} internship application(s):\n", int_porportions, "\n\n")
         with col4:
             st.write(f"Percent < {threshold} job application(s):\n", job_porportions)
+        # Move the slider to the bottom of the output
         st.write("")
-        threshold = st.slider('Threshold', 0, 10, 0, key='bottom_threshold') 
+        threshold = st.slider('Threshold', 0, 10, 0, key='bottom_threshold')
 
 
     if subtopic == 'Internship Applications':
