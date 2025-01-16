@@ -48,7 +48,7 @@ if topic == 'First Gen Data':
 
 
         # Threshold for number of Apps
-        st.header("Students With less than threshold Handshake Application")
+        st.write("", "Students With less than threshold Handshake Application")
         threshold = 1 # Initialize threshold
         threshold = st.slider('Threshold', 0, 10, 0) # User specified number of ints/jobs higher or less than
         # Percent of Each Group
