@@ -46,27 +46,30 @@ if topic == 'First Gen Data':
         with col2:
             st.write(round(total_proportions * 100, 2))
 
-        # Threshold apps
-        threshold = st.slider('Threshold', 0, 10, 0) # Number of ints/jobs higher or less than
+
+        # Threshold for number of Apps
+        st.header("Students With less than threshold Handshake Application")
+        threshold = 1 
         internship_counts = anonymous_app_counts[anonymous_app_counts.Internship >= threshold]['First Gen'].value_counts().rename('%')
         int_porportions = 100 * (1 - round(internship_counts/total_counts, 2))
         
         col3, col4 = st.columns(2)
         with col3:
-            st.write(f"Percent (%) less than {threshold} internship application(s):\n", int_porportions, "\n\n")
+            st.write(f"Percent < {threshold} internship application(s):\n", int_porportions, "\n\n")
 
         # anonymous_app_counts.Job.sort_values(ascending=True)[-20:]
         job_counts = anonymous_app_counts[anonymous_app_counts.Job >= threshold]['First Gen'].value_counts().rename('%')
         job_porportions = 100 * (1 - round(job_counts/total_counts, 2))
         with col4:
-            st.write(f"Percent less than {threshold} job application(s):\n", job_porportions)
+            st.write(f"Percent < {threshold} job application(s):\n", job_porportions)
+        threshold = st.slider('Threshold', 0, 10, 0) # Number of ints/jobs higher or less than
 
 
     if subtopic == 'Internship Applications':
         # Look at percentiles from lower to upper threshold
         percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
-        percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 51)
-        percentiles = [x * 0.01 for x in range(percentiles_lower, percentiles_upper)]
+        percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 0 )
+        percentiles = [x * .01 for x in range(percentiles_lower, percentiles_upper)]
         # Group by First Gen and calculate percentiles
         int_app_percentiles = anonymous_app_counts.groupby('First Gen')['Internship'].quantile(percentiles).unstack(level=1)
         
@@ -89,7 +92,7 @@ if topic == 'First Gen Data':
     elif subtopic == 'Job Applications':
         percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
         percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 51)
-        percentiles = [x * 0.01 for x in range(percentiles_lower, percentiles_upper)]
+        percentiles = [x * .01 for x in range(percentiles_lower, percentiles_upper)]
         job_app_percentiles = anonymous_app_counts.groupby('First Gen')['Job'].quantile(percentiles).unstack(level=1)
 
         # Job percentile plot
