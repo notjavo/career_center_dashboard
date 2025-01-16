@@ -51,7 +51,6 @@ if topic == 'First Gen Data':
         st.write("")
         st.write("Students With less than threshold Handshake Application")
         threshold = 1 # Initialize threshold
-        threshold = st.slider('Threshold', 0, 10, 0) # User specified number of ints/jobs higher or less than
         # Percent of Each Group
         internship_counts = anonymous_app_counts[anonymous_app_counts.Internship >= threshold]['First Gen'].value_counts().rename('Percent(%)')
         int_porportions = 100 * (1 - round(internship_counts/total_counts, 2))
@@ -64,7 +63,7 @@ if topic == 'First Gen Data':
         with col4:
             st.write(f"Percent < {threshold} job application(s):\n", job_porportions)
         st.write("")
-        st.slider('Threshold', 0, 10, 0, key='bottom_threshold')
+        st.slider('Threshold', 0, 10, 0, key='bottom_threshold') # User specified number of ints/jobs higher or less than
 
 
     if subtopic == 'Internship Applications':
