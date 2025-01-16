@@ -52,7 +52,7 @@ if topic == 'First Gen Data':
         threshold = 0
         threshold_placeholder = st.empty()
         threshold = threshold_placeholder.slider('Threshold', 0, 10, 0) # User specified number of ints/jobs higher or less than
-        st.subheader(f"Students With less than", {threshold}, "Handshake Application")
+        st.subheader(f"Students With less than {threshold} Handshake Application")
         # Percent of Each Group
         internship_counts = anonymous_app_counts[anonymous_app_counts.Internship >= threshold]['First Gen'].value_counts().rename('Percent(%)')
         int_porportions = 100 * (1 - round(internship_counts/total_counts, 2))
