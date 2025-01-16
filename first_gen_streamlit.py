@@ -49,6 +49,7 @@ if topic == 'First Gen Data':
 
         # Visualizing percent with less than given number of apps by group
         # Initialize threshold using a placeholder
+        threshold = 0
         threshold_placeholder = st.empty()
         threshold = threshold_placeholder.slider('Threshold', 0, 10, 0) # User specified number of ints/jobs higher or less than
         st.subheader(f"Students With less than", {threshold}, "Handshake Application")
