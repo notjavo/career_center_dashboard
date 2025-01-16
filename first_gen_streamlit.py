@@ -47,7 +47,6 @@ if topic == 'First Gen Data':
         with col2:
             st.write(round(total_proportions * 100, 2))
 
-
         # Threshold for number of Apps
         st.write("")
         st.write("Students With less than threshold Handshake Application")
@@ -64,7 +63,9 @@ if topic == 'First Gen Data':
             st.write(f"Percent < {threshold} internship application(s):\n", int_porportions, "\n\n")
         with col4:
             st.write(f"Percent < {threshold} job application(s):\n", job_porportions)
-    
+        st.write("")
+        st.slider('Threshold', 0, 10, 0, key='bottom_threshold')
+
 
     if subtopic == 'Internship Applications':
         # Look at percentiles from lower to upper threshold
