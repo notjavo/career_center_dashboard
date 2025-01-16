@@ -49,22 +49,21 @@ if topic == 'First Gen Data':
 
         # Threshold for number of Apps
         st.header("Students With less than threshold Handshake Application")
-        threshold = 1 
+        threshold = 1 # Initialize threshold
+        threshold = st.slider('Threshold', 0, 10, 0) # User specified number of ints/jobs higher or less than
+        # Percent of Each Group
         internship_counts = anonymous_app_counts[anonymous_app_counts.Internship >= threshold]['First Gen'].value_counts().rename('Percent(%)')
         int_porportions = 100 * (1 - round(internship_counts/total_counts, 2))
-        
+        job_counts = anonymous_app_counts[anonymous_app_counts.Job >= threshold]['First Gen'].value_counts().rename('\%')
+        job_porportions = 100 * (1 - round(job_counts/total_counts, 2))
+        # Ouputting Int/Job Tables for Percet Under Threshold
         col3, col4 = st.columns(2)
         with col3:
             st.write(f"Percent < {threshold} internship application(s):\n", int_porportions, "\n\n")
-
-        # anonymous_app_counts.Job.sort_values(ascending=True)[-20:]
-        job_counts = anonymous_app_counts[anonymous_app_counts.Job >= threshold]['First Gen'].value_counts().rename('\%')
-        job_porportions = 100 * (1 - round(job_counts/total_counts, 2))
         with col4:
             st.write(f"Percent < {threshold} job application(s):\n", job_porportions)
-        threshold = st.slider('Threshold', 0, 10, 0) # Number of ints/jobs higher or less than
-
-
+    
+    
     if subtopic == 'Internship Applications':
         # Look at percentiles from lower to upper threshold
         percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
