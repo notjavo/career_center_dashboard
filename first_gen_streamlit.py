@@ -49,8 +49,8 @@ if topic == 'First Gen Data':
 
         # Visualizing percent with less than given number of apps by group
         threshold = 0 # Initialize threshold using a placeholder
-        st.subheader(f"Students With less than {threshold} Handshake Application")
-        threshold = st.slider("Cutoff Number of Ints/Job Applications", 0, 10, 0)
+        st.subheader("Percent of UVA Students With Less Than Given Number of Applications")
+        threshold = st.slider("Cutoff Number of Ints/Job Applications", 0, 100, 0)
         # Percent of Each Group
         internship_counts = anonymous_app_counts[anonymous_app_counts.Internship >= threshold]['First Gen'].value_counts().rename('Percent(\\%)')
         int_porportions = (100 * (1 - round(internship_counts/total_counts, 2))).rename('Percent (%)')
