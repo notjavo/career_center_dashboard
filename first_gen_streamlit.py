@@ -58,7 +58,7 @@ if topic == 'First Gen Data':
             st.write(f"Percent < {threshold} internship application(s):\n", int_porportions, "\n\n")
 
         # anonymous_app_counts.Job.sort_values(ascending=True)[-20:]
-        job_counts = anonymous_app_counts[anonymous_app_counts.Job >= threshold]['First Gen'].value_counts().rename('%')
+        job_counts = anonymous_app_counts[anonymous_app_counts.Job >= threshold]['First Gen'].value_counts().rename('\%')
         job_porportions = 100 * (1 - round(job_counts/total_counts, 2))
         with col4:
             st.write(f"Percent < {threshold} job application(s):\n", job_porportions)
@@ -72,8 +72,6 @@ if topic == 'First Gen Data':
         percentiles = [x * .01 for x in range(percentiles_lower, percentiles_upper)]
         # Group by First Gen and calculate percentiles
         int_app_percentiles = anonymous_app_counts.groupby('First Gen')['Internship'].quantile(percentiles).unstack(level=1)
-        
-
 
         # Plotting Percentiles plot for Internships
         fig1, ax1 = plt.subplots(figsize=(8, 6))
