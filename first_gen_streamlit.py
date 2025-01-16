@@ -37,6 +37,7 @@ if topic == 'First Gen Data':
         st.pyplot(fig)
 
         # Looking at Counts and Proportions of First gen or Not
+        st.write("")
         st.write("UVA Students With Handshake Application and First Gen Data From 2021-2024")
         total_counts = anonymous_app_counts['First Gen'].value_counts().rename('Number of UVA students')
         total_proportions = anonymous_app_counts['First Gen'].value_counts(normalize=True).rename('Percent of UVA Students')
@@ -48,7 +49,8 @@ if topic == 'First Gen Data':
 
 
         # Threshold for number of Apps
-        st.write("", "Students With less than threshold Handshake Application")
+        st.write("")
+        st.write("Students With less than threshold Handshake Application")
         threshold = 1 # Initialize threshold
         threshold = st.slider('Threshold', 0, 10, 0) # User specified number of ints/jobs higher or less than
         # Percent of Each Group
