@@ -52,16 +52,16 @@ if topic == 'First Gen Data':
         st.subheader(f"Students With less than {threshold} Handshake Application")
         threshold = st.slider("Cutoff Number of Ints/Job Applications", 0, 10, 0)
         # Percent of Each Group
-        internship_counts = anonymous_app_counts[anonymous_app_counts.Internship >= threshold]['First Gen'].value_counts().rename('Percent(%)')
+        internship_counts = anonymous_app_counts[anonymous_app_counts.Internship >= threshold]['First Gen'].value_counts().rename('Percent(\\%)')
         int_porportions = 100 * (1 - round(internship_counts/total_counts, 2))
-        job_counts = anonymous_app_counts[anonymous_app_counts.Job >= threshold]['First Gen'].value_counts().rename('\%')
+        job_counts = anonymous_app_counts[anonymous_app_counts.Job >= threshold]['First Gen'].value_counts().rename('\\%')
         job_porportions = 100 * (1 - round(job_counts/total_counts, 2))
         # Ouputting Int/Job Tables for Percet Under Threshold
         col3, col4 = st.columns(2)
         with col3:
-            st.write(f"Percent < {threshold} internship application(s):\n", int_porportions, "\n\n")
+            st.write(f"Percent Students < {threshold} internship app(s):\n", int_porportions)
         with col4:
-            st.write(f"Percent < {threshold} job application(s):\n", job_porportions)
+            st.write(f"Percent Students < {threshold} job app(s):\n", job_porportions)
     
         
 
