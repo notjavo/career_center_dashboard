@@ -37,7 +37,7 @@ if topic == 'First Gen Data':
         st.pyplot(fig)
 
         # Looking at Counts and Proportions of First gen or Not
-        st.write("UVA Students With Handshake Applications Data From 2021-2024")
+        st.write("UVA Students With Handshake Application and First Gen Data From 2021-2024")
         total_counts = anonymous_app_counts['First Gen'].value_counts().rename('Number of UVA students')
         total_proportions = anonymous_app_counts['First Gen'].value_counts(normalize=True).rename('Percent of UVA Students')
         col1, col2 = st.columns(2)
@@ -63,7 +63,7 @@ if topic == 'First Gen Data':
         with col4:
             st.write(f"Percent < {threshold} job application(s):\n", job_porportions)
     
-    
+
     if subtopic == 'Internship Applications':
         # Look at percentiles from lower to upper threshold
         percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
