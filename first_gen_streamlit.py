@@ -11,7 +11,7 @@ anonymous_app_counts = pd.read_csv('anonymous_app_counts.csv') # Read in app Cou
 st.title('UVA Career Center Data')
 topic = st.sidebar.selectbox(
     'What Do you want to look at? ',
-    ['Internship Data', 'First Gen Data', 'In-State / Out of State Data'])
+    ['First Gen Data', 'Internship Data','In-State / Out of State Data'])
 
 
 if topic == 'First Gen Data':
