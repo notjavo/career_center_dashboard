@@ -4,7 +4,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import first_gen
 
-anonymous_app_counts = pd.read_csv('anonymous_app_counts.csv') # Read in app Count data
+
 
 
 # Give page a title and give Uer options
@@ -17,7 +17,7 @@ topic = st.sidebar.selectbox(
 if topic == 'First Gen Data':
     first_gen.user_input()
 
-elif topic == 'Career Center Surveys':
+elif topic == 'Career Center Survey Overviews':
     st.write("-3")
 elif topic == 'State Retention Data':
     st.write(-2)

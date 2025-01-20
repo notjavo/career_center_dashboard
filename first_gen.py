@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 
+anonymous_app_counts = pd.read_csv('anonymous_app_counts.csv') # Read in app Count data
 
 def user_input():
     subtopic = st.selectbox("What Aspect of UVA First Generation Data do you Want to see?", ["Overview", "Internship Applications", "Job Applications",]) 
