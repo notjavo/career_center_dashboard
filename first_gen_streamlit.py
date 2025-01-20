@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
+# Use pipenv install to install packages 
 
 
 anonymous_app_counts = pd.read_csv('anonymous_app_counts.csv') # Read in app Count data
