@@ -38,7 +38,7 @@ if topic == 'Career Center Student Engagement':
 
         for school in subtopic_2:
             visual = handshake_data[handshake_data['College_fds_2024'] == school].groupby([ 'College_fds_2024', 'Number of Internships',])[subtopic_1] \
-                                                                    .agg(['mean', 'median', 'std', 'min', 'max','count'])
+                                                                    .agg(['mean', 'median', 'std', 'min', 'max','count']).round(2)
             st.write(f" {subtopic_1} for UVA {school} 2024 graduates by Number of Internships")
             st.write(visual)
     
