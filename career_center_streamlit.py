@@ -35,7 +35,7 @@ if topic == 'Career Center Student Engagement':
                                                                                 "School of Medicine",                                 
                                                                                 "Darden Graduate School of Business Administration"])
     if subtopic_2:
-        visual = handshake_data[handshake_data['College_fds_2024'].isin(subtopic_2)].groupby('Number of Internships', subtopic_2)[subtopic_1].agg(['mean', 'median', 'std', 'min', 'max', 
+        visual = handshake_data[handshake_data['College_fds_2024'].isin(subtopic_2)].groupby(['Number of Internships', 'College_fds_2024'])[subtopic_1].agg(['mean', 'median', 'std', 'min', 'max', 
                                                                                 'count'])
         st.write(f" {subtopic_1} for UVA {subtopic_2} 2024 graduates by Number of Internships")
         st.write(visual)
