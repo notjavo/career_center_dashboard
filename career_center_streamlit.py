@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 import first_gen
+import seaborn
 handshake_data = pd.read_csv('handshake_data.csv')
 
 
