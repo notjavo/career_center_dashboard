@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 
-anonymous_app_counts = pd.read_csv('anonymous_app_counts.csv') # Read in app Count data
+handshake_data = pd.read_csv('handshake_data.csv') # Read in app Count data
 
 def user_input():
     subtopic = st.selectbox("What Aspect of UVA First Generation Data do you Want to see?", ["Overview", "Internship Applications", "Job Applications",]) 
@@ -30,8 +30,8 @@ def user_input():
         # Looking at Counts and Proportions of First gen or Not
         st.write("")
         st.subheader("UVA Students With Handshake Application and First Gen Data From 2021-2024")
-        total_counts = anonymous_app_counts['First Gen'].value_counts().rename('Number of UVA students')
-        total_proportions = anonymous_app_counts['First Gen'].value_counts(normalize=True).rename('Percent of UVA Students')
+        total_counts = handshake_data['First Gen'].value_counts().rename('Number of UVA students')
+        total_proportions = handshake_data['First Gen'].value_counts(normalize=True).rename('Percent of UVA Students')
         col1, col2 = st.columns(2)
         with col1:
             st.write(total_counts)
@@ -43,9 +43,9 @@ def user_input():
         st.subheader("Percent of UVA Students With Less Than Given Number of Applications")
         threshold = st.slider("Cutoff Number of Ints/Job Applications", 0, 100, 0)
         # Percent of Each Group
-        internship_counts = anonymous_app_counts[anonymous_app_counts.Internship >= threshold]['First Gen'].value_counts().rename('Percent(\\%)')
+        internship_counts = handshake_data[handshake_data.Internship >= threshold]['First Gen'].value_counts().rename('Percent(\\%)')
         int_porportions = (100 * (1 - round(internship_counts/total_counts, 2))).rename('Percent (%)')
-        job_counts = anonymous_app_counts[anonymous_app_counts.Job >= threshold]['First Gen'].value_counts().rename('\\%')
+        job_counts = handshake_data[handshake_data.Job >= threshold]['First Gen'].value_counts().rename('\\%')
         job_porportions =(100 * (1 - round(job_counts/total_counts, 2))).rename('Percent (%)')
         # Ouputting Int/Job Tables for Percet Under Threshold
         col3, col4 = st.columns(2)
@@ -61,7 +61,7 @@ def user_input():
         percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 0 )
         percentiles = [x * .01 for x in range(percentiles_lower, percentiles_upper)]
         # Group by First Gen and calculate percentiles
-        int_app_percentiles = anonymous_app_counts.groupby('First Gen')['Internship'].quantile(percentiles).unstack(level=1)
+        int_app_percentiles = handshake_data.groupby('First Gen')['Internship Applications'].quantile(percentiles).unstack(level=1)
 
         # Plotting Percentiles plot for Internships
         fig1, ax1 = plt.subplots(figsize=(8, 6))
@@ -81,7 +81,7 @@ def user_input():
         percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
         percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 51)
         percentiles = [x * .01 for x in range(percentiles_lower, percentiles_upper)]
-        job_app_percentiles = anonymous_app_counts.groupby('First Gen')['Job'].quantile(percentiles).unstack(level=1)
+        job_app_percentiles = handshake_data.groupby('First Gen')['Job Applications'].quantile(percentiles).unstack(level=1)
 
         # Job percentile plot
         fig1, ax1 = plt.subplots(figsize=(8, 6))
