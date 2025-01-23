@@ -13,7 +13,7 @@ topic = st.sidebar.selectbox(
     ['Career Center Student Engagement', 'First Gen Data', 'Internship Impact','State Retention Data', 'Career Center Surveys'])
 
 if topic == 'Career Center Student Engagement':
-    subtopic_1= st.selectbox("Which Metric do you want to see?", ["num fairs", "Alignment", "Applications", "Career Readiness"])
+    subtopic_1= st.selectbox("Which Metric do you want to see?", ["Number of Fairs Attended", "Job Applications", "Internship Applications", "Alignment", "Career Readiness"])
     subtopic_2 = st.selectbox("Which College Do you want to see data for ?", ["College and Graduate School of Arts & Sciences",                                                                            
                                                                                 "School of Engineering & Applied Science",           
                                                                                 "School of Architecture",                             
