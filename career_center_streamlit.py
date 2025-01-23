@@ -25,6 +25,7 @@ if topic == 'Career Center Student Engagement':
                                                                                 "Darden Graduate School of Business Administration"])
     visual = handshake_data[handshake_data['College_fds_2024']==subtopic_2].groupby('Number of Internships')[subtopic_1].agg(['mean', 'median', 'std', 'min', 'max', 
                                                                             'count'])
+    st.write(f"UVA {subtopic_2} {subtopic_1} 2024 data by Number of Internships")
     st.write(visual)
 
 
