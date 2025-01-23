@@ -23,7 +23,7 @@ if topic == 'Career Center Student Engagement':
                                                                                 "School of Continuing and Professional Studies",      
                                                                                 "School of Medicine",                                 
                                                                                 "Darden Graduate School of Business Administration"])
-    visual = handshake_data.groupby(['College_fds_2024', 'Number of Intenrships'])[subtopic_1].agg(['mean', 'median', 'std', 'min', 'max', 
+    visual = handshake_data.groupby(['College_fds_2024', 'Number of Internships'])[subtopic_1].agg(['mean', 'median', 'std', 'min', 'max', 
                                                                             'count'])
     st.write(visual)
 
