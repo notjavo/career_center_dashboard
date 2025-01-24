@@ -5,10 +5,13 @@ import matplotlib.pyplot as plt
 
 handshake_data = pd.read_csv('handshake_data.csv') # Read in app Count data
 
-def user_input():
-    subtopic = st.selectbox("What Aspect of UVA First Generation Data do you Want to see?", ["Overview", "Internship Applications", "Job Applications",]) 
+def user_input(subtopic_1):
+    """ Function to take user defined input and display data based on this input
+     Args:
+     Returns: 
+    """ 
 
-    if subtopic == "Overview":
+    if subtopic_1== "Overview":
         # First Gen Data
         df = pd.DataFrame({'year': [2022, 2023, 2024, 2025, 2026, 2027, 2028],
                     'first_gen': [7.7, 12.8, 13.6, 12, 15.7, 17.5, 18.8]})
@@ -55,7 +58,7 @@ def user_input():
             st.write(f"UVA Students < {threshold} job app(s):\n", job_porportions)
 
 
-    if subtopic == 'Internship Applications':
+    if subtopic_1 == 'Internship Applications':
         # Look at percentiles from lower to upper threshold
         percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
         percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 0 )
@@ -77,7 +80,7 @@ def user_input():
         # Displaying the plot in Streamlit
         st.pyplot(fig1)
 
-    elif subtopic == 'Job Applications':
+    elif subtopic_1 == 'Job Applications':
         percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
         percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 51)
         percentiles = [x * .01 for x in range(percentiles_lower, percentiles_upper)]
@@ -95,3 +98,7 @@ def user_input():
         ax1.grid(True)
         # Displaying the plot in Streamlit
         st.pyplot(fig1)
+
+
+    subtopic_1 = st.selectbox("What Aspect of UVA First Generation Data do you Want to see?", ["Overview", "Internship Applications", "Job Applications",])
+    user_input(subtopic_1)

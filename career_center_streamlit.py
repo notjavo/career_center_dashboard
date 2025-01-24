@@ -2,28 +2,24 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
-import first_gen
-import seaborn
+import first_gen, data_by_groups
 
-# Clear cache
-st.cache_data.clear()
-
-handshake_data = pd.read_csv('handshake_data.csv')
+st.cache_data.clear() # Clear cache
+handshake_data = pd.read_csv('handshake_data.csv') # Importing Handshake Data
 
 
-# Give page a title and give Uer options
+# Give Dashboard a title and give User options
 st.title('UVA Career Center Data')
 topic = st.sidebar.selectbox(
     'What Do you want to look at? ',
     ['Data by School/Groups', 'First Gen Data', 'Internship Impact','State Retention Data', 'Career Center Surveys'])
 
 
+# Call other scripts based on user input
 if topic == 'Data by School/Groups':
-    data_by_groups.user_input()
-
+    data_by_groups.user_input() 
 elif topic == 'First Gen Data':
-    first_gen.user_input()
-
+    first_gen.user_input() 
 elif topic == 'Career Center Survey Overviews':
     st.write("-3")
 elif topic == 'State Retention Data':
