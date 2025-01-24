@@ -15,34 +15,11 @@ handshake_data = pd.read_csv('handshake_data.csv')
 st.title('UVA Career Center Data')
 topic = st.sidebar.selectbox(
     'What Do you want to look at? ',
-    ['Career Center Student Engagement', 'First Gen Data', 'Internship Impact','State Retention Data', 'Career Center Surveys'])
+    ['Data by School/Groups', 'First Gen Data', 'Internship Impact','State Retention Data', 'Career Center Surveys'])
 
-# Add a checkbox to toggle the display of the data table
-show_data = st.sidebar.checkbox('Show raw data')
 
-if show_data:
-    st.write(handshake_data)
-
-if topic == 'Career Center Student Engagement':
-    subtopic_1= st.selectbox("Which Metric do you want to see?", ["Number of Fairs Attended", "Job Applications", "Internship Applications", "Alignment", "Career Readiness"])
-    subtopic_2 = st.multiselect("Which College Do you want to see data for ?", ["College and Graduate School of Arts & Sciences",                                                                            
-                                                                                "School of Engineering & Applied Science",           
-                                                                                "School of Architecture",                             
-                                                                                "School of Education and Human Development",          
-                                                                                "School of Data Science",                             
-                                                                                "School of Nursing",                                  
-                                                                                "School of Continuing and Professional Studies",      
-                                                                                "School of Medicine",                                 
-                                                                                "Darden Graduate School of Business Administration"])
-    if subtopic_2:
-
-        for school in subtopic_2:
-            visual = handshake_data[handshake_data['College_fds_2024'] == school].groupby([ 'College_fds_2024', 'Number of Internships',])[subtopic_1] \
-                                                                    .agg(['mean', 'median', 'std', 'min', 'max','count']).round(2)
-            st.write(f" {subtopic_1} for UVA {school} 2024 graduates by Number of Internships")
-            st.write(visual)
-    
-
+if topic == 'Data by School/Groups':
+    data_by_groups.user_input()
 
 elif topic == 'First Gen Data':
     first_gen.user_input()
