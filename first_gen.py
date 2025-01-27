@@ -3,6 +3,26 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 
+
+## Links for below statistics
+#https://nces.ed.gov/programs/coe/pdf/2022/cce_508.pdf 
+#https://uvamagazine.org/articles/the_class_of_2026_by_the_numbers 
+#https://news.virginia.edu/content/final-exercises-2022#:~:text=Looking%20Backlookingbacklooking-,University%20News,Play%20Video 
+#https://news.virginia.edu/content/diversity-rise 
+
+### UVA First Generation rate by class
+# * Class of 2028: 18.8%
+# * Class of 2027: 17.5%
+# * Class of 2026: 15.7%
+# * Class of 2025: 12%    (admitted students not matriculated for 2025)
+# * Class of 2024: 13.6%
+# * Class of 2023: 12.8%
+# * Class of 2022: 7.7%
+
+# ### Overview of First Generation rate in US
+# * 58% of US children under age 18 have one or more parent with a college degree 
+
+# Reading in Handshake Data
 handshake_data = pd.read_csv('handshake_data.csv') # Read in app Count data
 
 def user_input():
@@ -80,6 +100,7 @@ def user_input():
         # Displaying the plot in Streamlit
         st.pyplot(fig1)
 
+
     elif subtopic_1 == 'Job Applications':
         percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
         percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 51)
@@ -98,3 +119,25 @@ def user_input():
         ax1.grid(True)
         # Displaying the plot in Streamlit
         st.pyplot(fig1)
+
+
+
+ # # Make A choropleth of applications by students destination
+
+# fips_groundwater = pd.merge(va_counties, fds_2024_app_counts, left_on='CTYNAME', right_on='Jurisdiction', how='inner')
+# geojson_url = "https://raw.githubusercontent.com/plotly/datasets/master/geojson-counties-fips.json"
+# # Create choropleth map
+# fig = px.choropleth(
+#     fds_2024_app_counts,
+#     geojson=geojson_url,
+#     locations='FIPS',
+#     color='mean_county_depth',
+#     color_continuous_scale=px.colors.sequential.PuBu[::-1],
+#     scope='usa',  # Limits map to the United States
+#     labels={'values': 'mean water depth across stations by county'}
+# )
+# fig.update_geos(fitbounds="locations", visible=False)
+# fig.update_layout(
+#     title_text=f"{state} Mean Water Table Depth by County",
+#     title_x=0
+# )
