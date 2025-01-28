@@ -9,7 +9,7 @@ handshake_data = pd.read_csv('streamlit_data_anonymous.csv') # Read in app Count
 
 # Function to take user defined input and display data based on this input
 def user_input():
-    point_of_interest = st.selectbox("Which Metric do you want to see?", ["Internship Applications", "Job Applications", "Number of Fairs Attended", "Alignment", "Career Readiness"])
+    point_of_interest = st.selectbox("Which Metric do you want to see?", ["Job Applications", "Internship Applications", "Number of Fairs Attended", "Alignment", "Career Readiness"])
     schools = st.multiselect("Which College Do you want to see data for ?", ["College and Graduate School of Arts & Sciences",                                                                            
                                                                                 "School of Engineering & Applied Science",           
                                                                                 "School of Architecture",                             
@@ -18,7 +18,9 @@ def user_input():
                                                                                 "School of Nursing",                                  
                                                                                 "School of Continuing and Professional Studies",      
                                                                                 "School of Medicine",                                 
-                                                                                "Darden Graduate School of Business Administration"])
+                                                                                "Darden Graduate School of Business Administration"],
+                                                                                ["College and Graduate School of Arts & Sciences",                                                                            
+                                                                                "School of Engineering & Applied Science"] )
     
     visual = st.selectbox("Which Visual do you want to see?", ["Bar Chart", "Percentiles", "Table"])
     
@@ -46,8 +48,7 @@ def user_input():
     elif visual == "Percentiles":
         # Look at percentiles from lower to upper threshold
         percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
-        percentiles_upper = 50
-        percentiles_upper = st.slider('Select upper threshold for perentiles chart', 1, 100, 0 )
+        percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 99)
         percentiles = [x * .01 for x in range(percentiles_lower, percentiles_upper)]
         # Group by First Gen and calculate percentiles
         poi_percentiles = handshake_data[handshake_data['College_fds_2024'].isin(schools)].groupby('College_fds_2024')['Internship Applications'].quantile(percentiles).unstack(level=1)
