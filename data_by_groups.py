@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 
-handshake_data = pd.read_csv('handshake_data.csv') # Read in app Count data
+handshake_data = pd.read_csv('streamlit_data_anonymous.csv') # Read in app Count data
 
 
 
@@ -25,3 +25,7 @@ def user_input():
         st.write(f"{point_of_interest} for {school} 2024 graduates by Number of Internships")
         st.write(visual)
 
+    # Make a side by side boxplot of the data
+    fig, ax = plt.subplots()
+    handshake_data.boxplot(column=point_of_interest, by='Number of Internships', ax=ax)
+    plt.title(f"{point_of_interest} by Number of Internships")

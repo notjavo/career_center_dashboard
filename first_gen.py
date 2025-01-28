@@ -23,12 +23,12 @@ import matplotlib.pyplot as plt
 # * 58% of US children under age 18 have one or more parent with a college degree 
 
 # Reading in Handshake Data
-handshake_data = pd.read_csv('handshake_data.csv') # Read in app Count data
+handshake_data = pd.read_csv('streamlit_data_anonymous.csv') # Read in app Count data
 
 def user_input():
     """ Function to take user defined input and display data based on this input
     """ 
-    subtopic_1 == 'Overview'
+    subtopic_1 = 'Overview'
     subtopic_1 = st.selectbox("What Aspect of UVA First Generation Data do you Want to see?", ["Overview", "Internship Applications", "Job Applications",])
 
     if subtopic_1 == "Overview":
@@ -66,9 +66,9 @@ def user_input():
         st.subheader("Percent of UVA Students With Less Than Given Number of Applications")
         threshold = st.slider("Cutoff Number of Ints/Job Applications", 0, 100, 0)
         # Percent of Each Group
-        internship_counts = handshake_data[handshake_data.Internship >= threshold]['First Gen'].value_counts().rename('Percent(\\%)')
+        internship_counts = handshake_data[handshake_data['Internship Applications']>= threshold]['First Gen'].value_counts().rename('Percent(\\%)')
         int_porportions = (100 * (1 - round(internship_counts/total_counts, 2))).rename('Percent (%)')
-        job_counts = handshake_data[handshake_data.Job >= threshold]['First Gen'].value_counts().rename('\\%')
+        job_counts = handshake_data[handshake_data['Job Applications'] >= threshold]['First Gen'].value_counts().rename('\\%')
         job_porportions =(100 * (1 - round(job_counts/total_counts, 2))).rename('Percent (%)')
         # Ouputting Int/Job Tables for Percet Under Threshold
         col3, col4 = st.columns(2)

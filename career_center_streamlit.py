@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import first_gen, data_by_groups
 
 st.cache_data.clear() # Clear cache
-handshake_data = pd.read_csv('handshake_data.csv') # Importing Handshake Data
+handshake_data = pd.read_csv('streamlit_data_anonymous.csv') # Importing Handshake Data
 
 
 # Give Dashboard a title and give User options
