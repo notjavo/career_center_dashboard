@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
-from scipy import stats
 
 
 ## Links for below statistics
@@ -79,21 +78,6 @@ def user_input():
         with col4:
             st.write(f"UVA Students < {threshold} job app(s):\n", job_porportions)
 
-        # Use t-test to see if signifigant difference for Job/Internship applications for first gen students
-        int_first_gen = handshake_data.query("`First Gen` == True")['Internship Applications'].dropna()
-        int_non_first_gen = handshake_data.query("`First Gen`== False ")['Internship Applications'].dropna()
-        t_stat, p_value = stats.ttest_ind(int_first_gen, int_non_first_gen, equal_var=False) # t-test for Internship Applications
-        
-        string = f"Internships T-Test by First Gen \nt: {round(t_stat, 2)} \nP-value: {round(p_value, 8)}"
-        st.write(string)
-
-
-        # Use t-test to see if signifigant difference for Job/Internship applications for first gen students
-        job_first_gen = handshake_data.query("`First Gen`==True")['Job Applications'].dropna()
-        job_non_first_gen = handshake_data.query("`First Gen`==False")['Job Applications'].dropna()
-        t_stat, p_value = stats.ttest_ind(job_first_gen, job_non_first_gen, equal_var=False) # t-test for Job Applications
-        string = f"Jobs T-Test by First-Gen: \n T-statistic: {round(t_stat, 2)}\nP-value: {round(p_value, 3)}"
-        st.write(string)
 
 
     elif subtopic_1 == "Percentiles":

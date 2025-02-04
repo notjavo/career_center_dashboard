@@ -22,10 +22,12 @@ if topic == 'Data by School/Groups':
 elif topic == 'First Gen Data':
     first_gen.user_input() 
 elif topic == 'Internship Impact':
-    exec(open('internship_impact_model.py').read())
+    #exec(open('internship_impact_model.py').read())
+    st.write(-1)
 elif topic == 'Career Center Survey Overviews':
     st.write("-3")
 elif topic == 'State Retention Data':
     st.write(-2)
 elif topic == 'IPP Data':
-    exec(open('IPP_Data.py').read())
+    #exec(open('IPP_Data.py').read())
+    st.write(-1)
