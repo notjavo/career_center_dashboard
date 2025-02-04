@@ -9,6 +9,8 @@ handshake_data = pd.read_csv('streamlit_data_anonymous.csv') # Read in app Count
 def user_input():
     point_of_interest = st.selectbox("Which Metric do you want to see?", ["Job Applications", 
                                                                           "Internship Applications",
+                                                                          "num_events",
+                                                                          "num_appointments"
                                                                             "num_fairs", 
                                                                             "Alignment",
                                                                               "Career Readiness"])
