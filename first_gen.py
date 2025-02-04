@@ -3,25 +3,6 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 
-
-## Links for below statistics
-#https://nces.ed.gov/programs/coe/pdf/2022/cce_508.pdf 
-#https://uvamagazine.org/articles/the_class_of_2026_by_the_numbers 
-#https://news.virginia.edu/content/final-exercises-2022#:~:text=Looking%20Backlookingbacklooking-,University%20News,Play%20Video 
-#https://news.virginia.edu/content/diversity-rise 
-
-### UVA First Generation rate by class
-# * Class of 2028: 18.8%
-# * Class of 2027: 17.5%
-# * Class of 2026: 15.7%
-# * Class of 2025: 12%    (admitted students not matriculated for 2025)
-# * Class of 2024: 13.6%
-# * Class of 2023: 12.8%
-# * Class of 2022: 7.7%
-
-# ### Overview of First Generation rate in US
-# * 58% of US children under age 18 have one or more parent with a college degree 
-
 # Reading in Handshake Data
 handshake_data = pd.read_csv('streamlit_data_anonymous.csv') # Read in app Count data
 
@@ -116,9 +97,14 @@ def user_input():
     if subtopic_1 == "Bar Chart":
         point_of_interest = st.selectbox("Which Metric do you want to see?", ["Job Applications", 
                                                                           "Internship Applications",
+                                                                          "num_events_checked_in",
+                                                                          "num_events_signed_up",
+                                                                          "num_appointments",
                                                                             "num_fairs", 
                                                                             "Alignment",
                                                                               "Career Readiness"])
+        avg_stat = st.selectbox("Which Stat do you want to see?", ["mean", "median"])
+
         def bar_chart(poi_stats, counts, point_of_interest):
             # Define custom colors
             colors = ['#1f77b4', '#ff7f0e']  # Blue and Orange (customizable)
@@ -129,23 +115,23 @@ def user_input():
 
             # Add labels, title, and legend
             ax.set_xlabel('First Generation Student (True/False)')
-            ax.set_ylabel(f'{point_of_interest} (median)')
+            ax.set_ylabel(f'{point_of_interest} ({avg_stat})')
             ax.set_title(f'{point_of_interest} by Group')
             ax.grid(True)
 
             # Add values on the bars
             for container in ax.containers:
-                ax.bar_label(container, fmt='%.2f', padding=3)
+                ax.bar_label(container, fmt='%.1f', padding=3)
 
             # Legend
-            legend_labels = [f"median {point_of_interest}\nUVA 2024 ({counts} students)"]
-            ax.legend(legend_labels, title='All UVA Schools (2024 Graduating Class)', loc='upper left', framealpha=.3)
+            legend_labels = [f"{avg_stat} {point_of_interest}\nUVA 2024 ({counts} students)"]
+            ax.legend(legend_labels, title='All UVA Schools (2024 Graduating Class)', bbox_to_anchor=(1.05, 1), framealpha=.3)
 
             # Display in Streamlit
             st.pyplot(fig)
 
         # Aggregate statistics
-        poi_stats = handshake_data.groupby('First Gen')[point_of_interest].agg(['median']).round(2)
+        poi_stats = handshake_data.groupby('First Gen')[point_of_interest].agg(avg_stat).round(2)
         counts = handshake_data['College_fds_2024'].notnull().sum()
 
         # Call the function
