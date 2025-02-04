@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
+from scipy import stats
 
 
 ## Links for below statistics
@@ -29,26 +30,27 @@ def user_input():
     """ Function to take user defined input and display data based on this input
     """ 
     subtopic_1 = 'Overview'
-    subtopic_1 = st.selectbox("What Aspect of UVA First Generation Data do you Want to see?", ["Overview", "Internship Applications", "Job Applications",])
+    subtopic_1 = st.selectbox("What Aspect of UVA First Generation Data do you Want to see?", ["Overview", "Percentiles", "Bar Chart"])
 
     if subtopic_1 == "Overview":
         # First Gen Data
         df = pd.DataFrame({'year': [2022, 2023, 2024, 2025, 2026, 2027, 2028],
-                    'first_gen': [7.7, 12.8, 13.6, 12, 15.7, 17.5, 18.8]})
+                    'first_gen': [11.07, 12.81, 13.60, 11.96, 15.62, 17.37, 18.83]})
 
         # Plotting UVA's First Generation Data 
         fig, ax = plt.subplots()
-        df.plot.bar(x='year', y='first_gen', rot=45, color='orange', ax=ax)
+        df.plot.bar(x='year', y='first_gen', rot=45, color='darkorange', ax=ax)
         ax.set_ylim(0, 25)
-        ax.set_title('Percentage of Students First Generation by UVA Class', fontsize=14, fontweight='bold')
+        ax.set_title('Percentage First Generation Student by UVA Class', fontsize=14, fontweight='bold')
         ax.set_xlabel('Graduating Class', fontsize=10)
-        ax.set_ylabel('Percentage (%)', fontsize=10)
+        ax.set_ylabel('Percentage of Students who are First Generation(%)', fontsize=10)
         plt.tight_layout()
         # Adding text annotations
         for i, v in enumerate(df['first_gen']):
-            ax.text(i, v + 1, f'{v:.1f}', ha='center')
+            ax.text(i, v + 1, f'{v:.1f}%', ha='center')
         # Displaying the plot in Streamlit
         st.pyplot(fig)
+
 
         # Looking at Counts and Proportions of First gen or Not
         st.write("")
@@ -77,48 +79,93 @@ def user_input():
         with col4:
             st.write(f"UVA Students < {threshold} job app(s):\n", job_porportions)
 
-
-    elif subtopic_1 == 'Internship Applications':
-        # Look at percentiles from lower to upper threshold
-        percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
-        percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 0 )
-        percentiles = [x * .01 for x in range(percentiles_lower, percentiles_upper)]
-        # Group by First Gen and calculate percentiles
-        int_app_percentiles = handshake_data.groupby('First Gen')['Internship Applications'].quantile(percentiles).unstack(level=1)
-
-        # Plotting Percentiles plot for Internships
-        fig1, ax1 = plt.subplots(figsize=(8, 6))
-        # colors = {'False': 'darkorange', 'True': 'blue'}
-        for i, first_gen in enumerate(int_app_percentiles.index):
-            ax1.plot(int_app_percentiles.columns, int_app_percentiles.values[i], marker='x', label=first_gen)
-        # Add labels, title, and legend
-        ax1.set_xlabel('Percentiles')
-        ax1.set_ylabel('Internship Applications')
-        ax1.set_title('Internship Applications by percentile First Gen Students')
-        ax1.legend(title='First Generation student')
-        ax1.grid(True)
-        # Displaying the plot in Streamlit
-        st.pyplot(fig1)
+        # Use t-test to see if signifigant difference for Job/Internship applications for first gen students
+        int_first_gen = handshake_data.query("`First Gen` == True")['Internship Applications'].dropna()
+        int_non_first_gen = handshake_data.query("`First Gen`== False ")['Internship Applications'].dropna()
+        t_stat, p_value = stats.ttest_ind(int_first_gen, int_non_first_gen, equal_var=False) # t-test for Internship Applications
+        
+        string = f"Internships T-Test by First Gen \nt: {round(t_stat, 2)} \nP-value: {round(p_value, 8)}"
+        st.write(string)
 
 
-    elif subtopic_1 == 'Job Applications':
-        percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
-        percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 51)
-        percentiles = [x * .01 for x in range(percentiles_lower, percentiles_upper)]
-        job_app_percentiles = handshake_data.groupby('First Gen')['Job Applications'].quantile(percentiles).unstack(level=1)
+        # Use t-test to see if signifigant difference for Job/Internship applications for first gen students
+        job_first_gen = handshake_data.query("`First Gen`==True")['Job Applications'].dropna()
+        job_non_first_gen = handshake_data.query("`First Gen`==False")['Job Applications'].dropna()
+        t_stat, p_value = stats.ttest_ind(job_first_gen, job_non_first_gen, equal_var=False) # t-test for Job Applications
+        string = f"Jobs T-Test by First-Gen: \n T-statistic: {round(t_stat, 2)}\nP-value: {round(p_value, 3)}"
+        st.write(string)
 
-        # Job percentile plot
-        fig1, ax1 = plt.subplots(figsize=(8, 6))
-        for i, first_gen in enumerate(job_app_percentiles.index):
-            ax1.plot(job_app_percentiles.columns, job_app_percentiles.values[i], marker='x', label=first_gen)
-        # Add labels, title, and legend
-        ax1.set_xlabel('Percentiles')
-        ax1.set_ylabel('Job Applications')
-        ax1.set_title('Job Applications by percentile First Gen Students')
-        ax1.legend(title='First Generation student')
-        ax1.grid(True)
-        # Displaying the plot in Streamlit
-        st.pyplot(fig1)
+
+    elif subtopic_1 == "Percentiles":
+        point_of_interest = st.selectbox("Which Metric do you want to see?", ["Job Applications", 
+                                                                          "Internship Applications",
+                                                                            "num_fairs", 
+                                                                            "Alignment",
+                                                                              "Career Readiness"])
+        def generate_percentiles():
+             # Look at percentiles from lower to upper threshold
+            percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
+            percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 50)
+            percentiles = [x * .01 for x in range(percentiles_lower, percentiles_upper)]
+            return percentiles
+        
+        def chart_percentiles(poi_percentiles):
+            # Plotting Percentiles plot for point_of interest
+            fig1, ax1 = plt.subplots(figsize=(8, 6))
+            # colors = {'False': 'darkorange', 'True': 'blue'}
+            for i, first_gen in enumerate(poi_percentiles.index):
+                ax1.plot(100*poi_percentiles.columns, poi_percentiles.values[i], marker='x', label=first_gen)
+            # Add labels, title, and legend
+            ax1.set_xlabel('Percentile')
+            ax1.set_ylabel(f'{point_of_interest}')
+            ax1.set_title(f'{point_of_interest} by percentile')
+            ax1.legend(title='First Generation Student (True/False)')
+            ax1.grid(True)
+            # Displaying the plot in Streamlit
+            st.pyplot(fig1)
+
+        percentiles = generate_percentiles() # User generated percentiles
+        poi_percentiles = handshake_data[handshake_data['College_fds_2024'].notnull()].groupby('First Gen')[point_of_interest].quantile(percentiles).unstack(level=1)
+        chart_percentiles(poi_percentiles) # chart percentiles by School All students
+
+
+    if subtopic_1 == "Bar Chart":
+        point_of_interest = st.selectbox("Which Metric do you want to see?", ["Job Applications", 
+                                                                          "Internship Applications",
+                                                                            "num_fairs", 
+                                                                            "Alignment",
+                                                                              "Career Readiness"])
+        def bar_chart(poi_stats, counts, point_of_interest):
+            # Define custom colors
+            colors = ['#1f77b4', '#ff7f0e']  # Blue and Orange (customizable)
+
+            # Plotting Bar Chart for point_of_interest
+            fig, ax = plt.subplots(figsize=(10, 6))
+            poi_stats.plot(kind='bar', ax=ax, width=0.8, color=colors)
+
+            # Add labels, title, and legend
+            ax.set_xlabel('First Generation Student (True/False)')
+            ax.set_ylabel(f'{point_of_interest} (median)')
+            ax.set_title(f'{point_of_interest} by Group')
+            ax.grid(True)
+
+            # Add values on the bars
+            for container in ax.containers:
+                ax.bar_label(container, fmt='%.2f', padding=3)
+
+            # Legend
+            legend_labels = [f"median {point_of_interest}\nUVA 2024 ({counts} students)"]
+            ax.legend(legend_labels, title='All UVA Schools (2024 Graduating Class)', loc='upper left', framealpha=.3)
+
+            # Display in Streamlit
+            st.pyplot(fig)
+
+        # Aggregate statistics
+        poi_stats = handshake_data.groupby('First Gen')[point_of_interest].agg(['median']).round(2)
+        counts = handshake_data['College_fds_2024'].notnull().sum()
+
+        # Call the function
+        bar_chart(poi_stats, counts, point_of_interest)
 
 
 
