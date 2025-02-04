@@ -13,7 +13,7 @@ handshake_data = pd.read_csv('streamlit_data_anonymous.csv') # Importing Handsha
 st.sidebar.title('UVA Career Center Data')
 topic = st.sidebar.selectbox(
     'What Data Do you want to look at? ',
-    ['Data by School/Groups', 'First Gen Data', 'Internship Impact', 'State Retention Data', 'Career Center Surveys', 'IPP Data'])
+    ['Data by School/Groups', 'First Gen Data', 'Internship Impact', 'State Retention Data', 'IPP Data'])
 
 
 # Call other scripts based on user input
@@ -24,8 +24,6 @@ elif topic == 'First Gen Data':
 elif topic == 'Internship Impact':
     #exec(open('internship_impact_model.py').read())
     st.write(-1)
-elif topic == 'Career Center Survey Overviews':
-    st.write("-3")
 elif topic == 'State Retention Data':
     st.write(-2)
 elif topic == 'IPP Data':
