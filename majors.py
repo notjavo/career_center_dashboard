@@ -38,10 +38,13 @@ result.round(1)
 result_percent=result.iloc[:, 5:]
 result = result.iloc[:, 1:5]
 
+# heatmap code
 plt.figure(figsize=(8,6))
-sns.heatmap(result_percent, annot=True, cmap="Blues")
+sns.heatmap(result_percent, annot=True, cmap="Blues", linewidths=0.5)
 
 plt.title("Internship Distribution Heatmap")
 plt.ylabel("Major")
 plt.xlabel("Num Internships")
-plt.show()
+
+# Display the plot in Streamlit
+st.pyplot(plt)
