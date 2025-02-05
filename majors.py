@@ -3,33 +3,32 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import streamlit as st
 
+
 def user_input():
     majors_data = pd.read_csv('streamlit_data_anonymous.csv', low_memory=False)
+
+    # Combine the number of internship and major columns together 
+    majors_data['Major'] = pd.concat([majors_data['Primary Major'], majors_data['Recipient Primary Majors_fds_2021'], majors_data['Recipient Primary Major_fds_2022'], majors_data['Q5.4_fds_2024']], ignore_index=True)
+    majors_data['num_internships'] = pd.concat([majors_data['Number of Internships_fds_2023'], majors_data['Number of Internships'], majors_data['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'], majors_data['If you participated in internships, how many internships did you have while attending the University of Virginia?_fds_2022']], ignore_index=True)
+
+    # Get by major Counts
+    counts= majors_data.groupby('Major')['num_internships'].value_counts().unstack(fill_value=0)
+
+    # Compute row-wise percentages
+    row_percents = (counts.div(counts.sum(axis=1), axis=0) * 100)
+    total_students = counts.sum(axis=1).rename('Total Students')
+
+    # Append '_percent' to column names
+    row_percents.columns = [f"{col} (%)" for col in row_percents.columns]
+
+    # Combine counts and percentages
+    result = pd.concat([total_students, counts], axis=1)
+    result = pd.concat([result, row_percents], axis=1)
+    result.columns.name = 'Num Internships'
+    result.index.name = 'Major'
     # Streamlit user input
-    analysis = st.selectbox('How do you want to see By Major Internship Data?', ['By specific Major', 'Sorted by Best/Worst'],
+    analysis = st.sidebar.selectbox('How do you want to see By Major Internship Data?', ['By specific Major', 'Sorted by Best/Worst'],
                             key='user_input')
-    # if analysis == 'Sorted by Best/Worst':
-    #     sorting = st.selectbox('How do you want to sort', ['0 (%)', '3+ (%)'],
-    #                            key='sorting')
-
-    #     result = result[result['Total Students']>=50].sort_values(by=sorting, ascending=False) # Show Highest First
-    #     result.round(1)
-
-
-    #     # Save counts and percent df's
-    #     result_percent=result.iloc[:, 5:]
-    #     result = result.iloc[:, :5]
-
-    #     # heatmap code
-    #     plt.figure(figsize=(8,6))
-    #     sns.heatmap(result_percent, annot=True, cmap="Blues", linewidths=0.5)
-
-    #     plt.title("Internship Distribution Heatmap")
-    #     plt.ylabel("Major")
-    #     plt.xlabel("Num Internships")
-
-    #     # Display the plot in Streamlit
-    #     st.pyplot(plt)
 
     if analysis == 'By specific Major':
         majors = st.multiselect('Which Majors do you want to see majors_data for?', ['African-American & African Studies',
@@ -95,29 +94,7 @@ def user_input():
             ],
             [ 'Engineering - Aerospace Engineering',
             'Engineering - Biomedical Engineering',
-            'Data Science'], key='Specific Major')
-        st.write(-1)
-        # Combine the number of internship and major columns together 
-        majors_data['Major'] = pd.concat([majors_data['Primary Major'], majors_data['Recipient Primary Majors_fds_2021'], majors_data['Recipient Primary Major_fds_2022'], majors_data['Q5.4_fds_2024']], ignore_index=True)
-        majors_data['num_internships'] = pd.concat([majors_data['Number of Internships_fds_2023'], majors_data['Number of Internships'], majors_data['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'], majors_data['If you participated in internships, how many internships did you have while attending the University of Virginia?_fds_2022']], ignore_index=True)
-
-        # Get by major Counts
-        counts= majors_data.groupby('Major')['num_internships'].value_counts().unstack(fill_value=0)
-
-        # Compute row-wise percentages
-        row_percents = (counts.div(counts.sum(axis=1), axis=0) * 100)
-        total_students = counts.sum(axis=1).rename('Total Students')
-
-        # Append '_percent' to column names
-        row_percents.columns = [f"{col} (%)" for col in row_percents.columns]
-
-        # Combine counts and percentages
-        result = pd.concat([total_students, counts], axis=1)
-        result = pd.concat([result, row_percents], axis=1)
-        result.columns.name = 'Num Internships'
-        result.index.name = 'Major'
-
-
+            'Data Science'])
         # Sort filtered columns
         sorting_column = '0 (%)' # column to filter by 
         result = result[(result['Total Students']>=4) & result.index.isin(majors)].sort_values(by=sorting_column, ascending=False) # Show Highest First
@@ -141,4 +118,24 @@ def user_input():
         st.write(result)
 
     elif analysis == 'Sorted by Best/Worst':
-        st.write(-1)
+        sorting = st.sidebar.selectbox('How do you want to sort', ['0 (%)', '3+ (%)'],
+                               key='sorting')
+        min_students = st.sidebar.slider("How many Students does Major need to have to show", 0, 100, 60)
+        result = result[result['Total Students']>=min_students].sort_values(by=sorting, ascending=False) # Show Highest First
+        result.round(1)
+
+
+        # Save counts and percent df's
+        result_percent=result.iloc[:, 5:]
+        result = result.iloc[:, 1:5]
+
+        # heatmap code
+        plt.figure(figsize=(8,6))
+        sns.heatmap(result_percent, annot=True, cmap="Blues", linewidths=0.5)
+
+        plt.title("Internship Distribution Heatmap")
+        plt.ylabel("Major")
+        plt.xlabel("Num Internships")
+
+        # Display the plot in Streamlit
+        st.pyplot(plt)

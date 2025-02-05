@@ -19,18 +19,18 @@ def user_input():
                                                                                 "Darden Graduate School of Business Administration"],
                                                                                 ["College and Graduate School of Arts & Sciences",                                                                            
                                                                                 "School of Engineering & Applied Science" ] )
-    point_of_interest = st.selectbox("Which Metric do you want to see?", ["Job Applications", 
+    point_of_interest = st.sidebar.selectbox("Which Metric do you want to see?", ["Job Applications", 
                                                                           "Internship Applications",
                                                                           "num_events_checked_in",
                                                                           "num_events_signed_up",
                                                                           "num_appointments",
                                                                             "num_fairs", 
                                                                             "Alignment",
-                                                                              "Career Readiness"], key='point_of_interest')
-    visual = st.selectbox("Which Visual do you want to see?", ["Bar Chart", "Percentiles", "Table"], key='visual')
+                                                                              "Career Readiness"])
+    visual = st.sidebar.selectbox("Which Visual do you want to see?", ["Bar Chart", "Percentiles", "Table"], key='visual')
     
     if visual == "Bar Chart":
-        avg_stat = st.selectbox("Which Stat do you want to see?", ["mean", "median"])
+        avg_stat = st.sidebar.selectbox("Which Stat do you want to see?", ["mean", "median"])
         def bar_chart(poi_stats, counts):
             # Plotting Bar Chart for point_of interest
             fig, ax = plt.subplots(figsize=(10, 6))

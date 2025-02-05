@@ -10,7 +10,7 @@ def user_input():
     """ Function to take user defined input and display data based on this input
     """ 
     subtopic_1 = 'Overview'
-    subtopic_1 = st.selectbox("What Aspect of UVA First Generation Data do you Want to see?", ["Overview", "Percentiles", "Bar Chart"])
+    subtopic_1 = st.sidebar.selectbox("What Aspect of UVA First Generation Data do you Want to see?", ["Overview", "Percentiles", "Bar Chart"])
 
     if subtopic_1 == "Overview":
         # First Gen Data
@@ -62,8 +62,11 @@ def user_input():
 
 
     elif subtopic_1 == "Percentiles":
-        point_of_interest = st.selectbox("Which Metric do you want to see?", ["Job Applications", 
+        point_of_interest = st.sidebar.selectbox("Which Metric do you want to see?", ["Job Applications", 
                                                                           "Internship Applications",
+                                                                          "num_events_checked_in",
+                                                                          "num_events_signed_up",
+                                                                          "num_appointments",
                                                                             "num_fairs", 
                                                                             "Alignment",
                                                                               "Career Readiness"])
@@ -95,7 +98,7 @@ def user_input():
 
 
     if subtopic_1 == "Bar Chart":
-        point_of_interest = st.selectbox("Which Metric do you want to see?", ["Job Applications", 
+        point_of_interest = st.sidebar.selectbox("Which Metric do you want to see?", ["Job Applications", 
                                                                           "Internship Applications",
                                                                           "num_events_checked_in",
                                                                           "num_events_signed_up",
