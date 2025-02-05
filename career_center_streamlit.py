@@ -2,10 +2,10 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
-import first_gen, data_by_groups
+import first_gen, data_by_groups, majors
 
 
-handshake_data = pd.read_csv('streamlit_data_anonymous.csv') # Importing Handshake Data
+handshake_data = pd.read_csv('streamlit_data_anonymous.csv', low_memory='False') # Importing Handshake Data
 
 
 
@@ -30,4 +30,5 @@ elif topic == 'IPP Data':
     #exec(open('IPP_Data.py').read())
     st.write(-1)
 elif topic == 'Internship By Major':
+    st.write(-1)
     exec(open('majors.py').read())

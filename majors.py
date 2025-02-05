@@ -4,12 +4,10 @@ import matplotlib.pyplot as plt
 import streamlit as st
 data = pd.read_csv('streamlit_data_anonymous.csv', low_memory=False)
 
-
 # Combine the number of internship and major columns together 
 data['Major'] = pd.concat([data['Primary Major'], data['Recipient Primary Majors_fds_2021'], data['Recipient Primary Major_fds_2022'], data['Q5.4_fds_2024']], ignore_index=True)
 data['num_internships'] = pd.concat([data['Number of Internships'], data['Q10.1_fds_2024'], data['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'], data['If you participated in internships, how many internships did you have while attending the University of Virginia?_fds_2022']], ignore_index=True)
-
-
+    # Get by major Counts
 counts= data.groupby('Major')['num_internships'].value_counts().unstack(fill_value=0)
 
 # Compute row-wise percentages
@@ -27,24 +25,121 @@ result.columns.name = 'Num Internships'
 result.index.name = 'Major'
 
 
-# User Specified Filters on the Data
-Threshold = st.slider() # minimum number of students in major to show
-sorting_column = '0 (%)' # column to filter by 
-result = result[result['Total Students']>=Threshold].sort_values(by=sorting_column, ascending=False) # Show Highest First
-result.round(1)
+# Streamlit user input
+analysis = st.selectbox('How do you want to see By Major Internship Data?', ['By specific Major', 'Sorted by Best/Worst'])
 
 
-# Save counts and percent df's
-result_percent=result.iloc[:, 5:]
-result = result.iloc[:, 1:5]
+if analysis == 'Sorted by Best/Worst':
+    sorting = st.selectbox('How do you want to sort', ['0 (%)', '3+ (%)'])
 
-# heatmap code
-plt.figure(figsize=(8,6))
-sns.heatmap(result_percent, annot=True, cmap="Blues", linewidths=0.5)
+    result = result[result['Total Students']>=50].sort_values(by=sorting, ascending=False) # Show Highest First
+    result.round(1)
 
-plt.title("Internship Distribution Heatmap")
-plt.ylabel("Major")
-plt.xlabel("Num Internships")
 
-# Display the plot in Streamlit
-st.pyplot(plt)
+    # Save counts and percent df's
+    result_percent=result.iloc[:, 5:]
+    result = result.iloc[:, :5]
+
+    # heatmap code
+    plt.figure(figsize=(8,6))
+    sns.heatmap(result_percent, annot=True, cmap="Blues", linewidths=0.5)
+
+    plt.title("Internship Distribution Heatmap")
+    plt.ylabel("Major")
+    plt.xlabel("Num Internships")
+
+    # Display the plot in Streamlit
+    st.pyplot(plt)
+    st.write(result)
+
+elif analysis == 'By Specific Major':
+    majors = st.multiselect('Which Majors do you want to see data for?', ['African-American & African Studies',
+        'American Studies - Interdisciplinary', 'Anthropology',
+        'Applied Statistics', 'Archaeology - Interdisciplinary', 'Architecture',
+        'Architecture - Architectural History',
+        'Architecture - Constructed Environment',
+        'Architecture - Landscape Architecture',
+        'Architecture - Urban & Environmental Planning', 'Art - Art History',
+        'Art - History of Art & Architecture', 'Art - Studio Art', 'Astronomy',
+        'Astronomy-Physics', 'Biochemistry & Molecular Genetics', 'Biology',
+        'Biophysics', 'Business Administration', 'Chemistry', 'Classics',
+        'Cognitive Science - Interdisciplinary', 'Computer Science',
+        'Computer Science - Interdisciplinary', 'Creative Writing',
+        'Data Science', 'Drama', 'East Asian Studies - Interdisciplinary',
+        'Echols Scholar - Interdisciplinary', 'Economics',
+        'Education - Administration & Supervision',
+        'Education - Athletic Training',
+        'Education - Clinical & School Psychology',
+        'Education - Counselor Education',
+        'Education - Curriculum & Instruction',
+        'Education - Early Childhood Development',
+        'Education - Educational Policy (Policy Studies)',
+        'Education - Educational Psychology',
+        'Education - Elementary Education', 'Education - English Education',
+        'Education - Higher Education', 'Education - Kinesiology',
+        'Education - Reading Education',
+        'Education - Research Statistics & Evaluation',
+        'Education - Science Education', 'Education - Social Studies Education',
+        'Education - Special Education',
+        'Education - Speech Communication Disorders',
+        'Education - Youth & Social Innovation',
+        'Engineering - Aerospace Engineering',
+        'Engineering - Biomedical Engineering',
+        'Engineering - Chemical Engineering', 'Engineering - Civil Engineering',
+        'Engineering - Computer Engineering', 'Engineering - Computer Science',
+        'Engineering - Electrical Engineering',
+        'Engineering - Engineering Science',
+        'Engineering - Materials Science & Engineering',
+        'Engineering - Materials Science and Engineering',
+        'Engineering - Mechanical & Aerospace Engineering',
+        'Engineering - Mechanical Engineering',
+        'Engineering - Systems Engineering', 'English',
+        'Environmental Sciences',
+        'Environmental Thought & Practice - Interdisciplinary',
+        'European Studies', 'Foreign Affairs', 'French',
+        'Global Studies - Interdisciplinary', 'Government',
+        'Health Sciences Management (SCPS)', 'History',
+        'Human Biology - Interdisciplinary', 'Interdisciplinary (SCPS-BIS)',
+        'Japanese Language & Literature - Interdisciplinary',
+        'Latin American Studies', 'Linguistics', 'Mathematics', 'Media Studies',
+        'Media Studies - Interdisciplinary', 'Microbiology',
+        'Middle Eastern and South Asian Languages and Cultures', 'Music',
+        'Neuroscience', 'Neuroscience - Interdisciplinary', 'Nursing',
+        'Pharmacology', 'Philosophy', 'Physics',
+        'Political & Social Thought - Interdisciplinary',
+        'Political Philosophy Policy & Law - Interdisciplinary', 'Psychology',
+        'Public Health', 'Public Policy', 'Public Safety',
+        'Quantative Analytics in Education & Social Science',
+        'Religious Studies', 'Slavic Languages and Literatures', 'Sociology',
+        'Spanish', 'Statistics', 'Urban Development',
+        'Women Gender & Sexuality - Interdisciplinary'
+        ],
+        [ 'Engineering - Aerospace Engineering',
+        'Engineering - Biomedical Engineering',
+        'Data Science'])
+
+
+    # Sort filtered columns
+    sorting_column = '0 (%)' # column to filter by 
+    result = result[(result['Total Students']>=4) & result.index.isin(majors)].sort_values(by=sorting_column, ascending=False) # Show Highest First
+    result.round(1)
+
+
+    # Save counts and percent df's
+    result_percent=result.iloc[:, 5:]
+    result = result.iloc[:, :5]
+
+    # heatmap code
+    plt.figure(figsize=(8,6))
+    sns.heatmap(result_percent, annot=True, cmap="Blues", linewidths=0.5)
+
+    plt.title("Internship Distribution Heatmap")
+    plt.ylabel("Major")
+    plt.xlabel("Num Internships")
+
+    # Display the plot in Streamlit
+    st.pyplot(plt)
+    st.write(result)
+
+else: 
+    st.write(-1)
