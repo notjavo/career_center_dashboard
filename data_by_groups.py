@@ -51,8 +51,8 @@ def user_input():
             else:  # If counts is a single number (no len())
                 legend_labels = [f"{avg_stat} {point_of_interest}\nUVA 2024 ({counts} students)"]
                 ax.legend(legend_labels, title='All UVA Schools (2024 Graduating Class)', bbox_to_anchor=(1.05, 1), framealpha=.3)
-
             st.pyplot(fig)
+
 
         # Group by school
         if schools ==  ['All']:

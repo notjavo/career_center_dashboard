@@ -2,11 +2,11 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import streamlit as st
-data = pd.read_csv('streamlit_data_anonymous.csv', low_memory=False)
+data = pd.read_csv('streamlit_data_anonymous.csv' )
 
 # Combine the number of internship and major columns together 
 data['Major'] = pd.concat([data['Primary Major'], data['Recipient Primary Majors_fds_2021'], data['Recipient Primary Major_fds_2022'], data['Q5.4_fds_2024']], ignore_index=True)
-data['num_internships'] = pd.concat([data['Number of Internships'], data['Q10.1_fds_2024'], data['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'], data['If you participated in internships, how many internships did you have while attending the University of Virginia?_fds_2022']], ignore_index=True)
+data['num_internships'] = pd.concat([data['Number of Internships'], data['Number of Internships'], data['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'], data['If you participated in internships, how many internships did you have while attending the University of Virginia?_fds_2022']], ignore_index=True)
     # Get by major Counts
 counts= data.groupby('Major')['num_internships'].value_counts().unstack(fill_value=0)
 
