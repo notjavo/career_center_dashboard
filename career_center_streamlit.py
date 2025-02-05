@@ -5,7 +5,20 @@ import matplotlib.pyplot as plt
 import first_gen, data_by_groups, majors
 
 
-handshake_data = pd.read_csv('streamlit_data_anonymous.csv', low_memory='False') # Importing Handshake Data
+
+st.set_page_config(layout="wide")  # Enables wider layout but not forced full width
+st.markdown(
+    """
+    <style>
+    .main .block-container {
+        max-width: 20%;  /* Adjust this percentage to control width */
+        margin: auto;  /* Centers the content */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 
 
 
@@ -13,7 +26,8 @@ handshake_data = pd.read_csv('streamlit_data_anonymous.csv', low_memory='False')
 st.sidebar.title('UVA Career Center Data')
 topic = st.sidebar.selectbox(
     'What Data Do you want to look at? ',
-    ['Data by School/Groups', 'First Gen Data', 'Internship Impact', 'State Retention Data', 'IPP Data', 'Internships By Major'])
+    ['Data by School/Groups', 'First Gen Data', 'Internship Impact', 'State Retention Data', 'IPP Data', 'Internships By Major'],
+    key='main')
 
 
 # Call other scripts based on user input
@@ -29,6 +43,5 @@ elif topic == 'State Retention Data':
 elif topic == 'IPP Data':
     #exec(open('IPP_Data.py').read())
     st.write(-1)
-elif topic == 'Internship By Major':
-    st.write(-1)
-    exec(open('majors.py').read())
+elif topic == 'Internships By Major':
+    majors.user_input()

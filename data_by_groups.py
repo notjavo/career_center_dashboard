@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 
-handshake_data = pd.read_csv('streamlit_data_anonymous.csv') # Read in app Count data
+handshake_data = pd.read_csv('streamlit_data_anonymous.csv', low_memory=False) # Read in app Count data
 
 # Function to take user defined input and display data based on this input
 def user_input():
@@ -26,8 +26,8 @@ def user_input():
                                                                           "num_appointments",
                                                                             "num_fairs", 
                                                                             "Alignment",
-                                                                              "Career Readiness"])
-    visual = st.selectbox("Which Visual do you want to see?", ["Bar Chart", "Percentiles", "Table"])
+                                                                              "Career Readiness"], key='point_of_interest')
+    visual = st.selectbox("Which Visual do you want to see?", ["Bar Chart", "Percentiles", "Table"], key='visual')
     
     if visual == "Bar Chart":
         avg_stat = st.selectbox("Which Stat do you want to see?", ["mean", "median"])
