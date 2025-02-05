@@ -69,8 +69,8 @@ def user_input():
                                                                               "Career Readiness"])
         def generate_percentiles():
              # Look at percentiles from lower to upper threshold
-            percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
-            percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 50)
+            percentiles_lower = st.slider('Select lower Threshold for percentiles chart', 0, 100, 0)
+            percentiles_upper = st.slider('Select upper Threshold for perentiles chart', 0, 100, 50)
             percentiles = [x * .01 for x in range(percentiles_lower, percentiles_upper)]
             return percentiles
         

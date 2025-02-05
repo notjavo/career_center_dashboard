@@ -70,9 +70,9 @@ def user_input():
         handshake_data[point_of_interest] = handshake_data[point_of_interest].fillna(0)
 
         def generate_percentiles():
-             # Look at percentiles from lower to upper threshold
-            percentiles_lower = st.slider('Select lower threshold for percentiles chart', 0, 100, 0)
-            percentiles_upper = st.slider('Select upper threshold for perentiles chart', 0, 100, 50)
+             # Look at percentiles from lower to upper Threshold
+            percentiles_lower = st.slider('Select lower Threshold for percentiles chart', 0, 100, 0)
+            percentiles_upper = st.slider('Select upper Threshold for perentiles chart', 0, 100, 50)
             percentiles = [(x * .01)+.01 for x in range(percentiles_lower, percentiles_upper)]
             return percentiles
         
@@ -80,13 +80,15 @@ def user_input():
             # Plotting Percentiles plot for point_of interest
             fig1, ax1 = plt.subplots(figsize=(8, 6))
             # colors = {'False': 'darkorange', 'True': 'blue'}
-            for i, first_gen in enumerate(poi_percentiles.index):
-                ax1.plot(100*poi_percentiles.columns, poi_percentiles.values[i], marker='x', label=first_gen)
+            for i, group in enumerate(poi_percentiles.index):
+                ax1.plot(100*poi_percentiles.columns, poi_percentiles.values[i], marker='x', label=group)
             # Add labels, title, and legend
             ax1.set_xlabel('Percentile')
             ax1.set_ylabel(f'{point_of_interest}')
             ax1.set_title(f'{point_of_interest} by percentile')
-            ax1.legend(title='Groups')
+    
+            legend_labels = [f"{point_of_interest} UVA 2024 \n {group} ({len(handshake_data[handshake_data['College_fds_2024'] == group])} students)" for group in poi_percentiles.index]
+            ax1.legend(legend_labels, title='Groups')
             ax1.grid(True)
             # Displaying the plot in Streamlit
             st.pyplot(fig1)
