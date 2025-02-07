@@ -3,9 +3,9 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import streamlit as st
 
+majors_data = pd.read_csv('streamlit_data_anonymous.csv', low_memory=False)
 
 def user_input():
-    majors_data = pd.read_csv('streamlit_data_anonymous.csv', low_memory=False)
     majors_data.majors_data.groupby('Primary Major')['Number of Internships_fds_2023'].value_counts().unstack(fill_value=0)
 
     # Combine the number of internship and major columns together 
