@@ -6,13 +6,20 @@ import streamlit as st
 
 def user_input():
     majors_data = pd.read_csv('streamlit_data_anonymous.csv', low_memory=False)
+    majors_data.majors_data.groupby('Primary Major')['Number of Internships_fds_2023'].value_counts().unstack(fill_value=0)
 
     # Combine the number of internship and major columns together 
     majors_data['Major'] = pd.concat([majors_data['Primary Major'], majors_data['Recipient Primary Majors_fds_2021'], majors_data['Recipient Primary Major_fds_2022'], majors_data['Q5.4_fds_2024']], ignore_index=True)
-    majors_data['num_internships'] = pd.concat([majors_data['Number of Internships_fds_2023'], majors_data['Number of Internships'], majors_data['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'], majors_data['If you participated in internships, how many internships did you have while attending the University of Virginia?_fds_2022']], ignore_index=True)
+    majors_data['num_internships'] = pd.concat([majors_data['Number of Internships_fds_2023'], majors_data['Number of Internships'], majors_data['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'], 
+                                                majors_data['If you participated in internships, how many internships did you have while attending the University of Virginia?_fds_2022']], ignore_index=True)
 
     # Get by major Counts
-    counts= majors_data.groupby('Major')['num_internships'].value_counts().unstack(fill_value=0)
+    counts= majors_data.groupby('Major')['num_internships'].size().unstack(fill_value=0)
+    counts1 = majors_data.groupby('Recipient Primary Majors_fds_2021')['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'].size().unstack(fill_value=0)
+    counts2 = majors_data.groupby('Recipient Primary Major_fds_2022')['If you participated in internships, how many internships did you have while attending the University of Virginia?_fds_2022'].size().unstack(fill_value=0)
+    counts3 = majors_data.groupby('Primary Major')['Number of Internships_fds_2023'].size().unstack(fill_value=0)
+    counts4 = majors_data.groupby('Q5.4_fds_2024')['Number of Internships'].value_counts().unstack(fill_value=0)
+    st.write(counts1, counts2, counts3, counts4)
 
     # Compute row-wise percentages
     row_percents = (counts.div(counts.sum(axis=1), axis=0) * 100)
@@ -139,3 +146,4 @@ def user_input():
 
         # Display the plot in Streamlit
         st.pyplot(plt)
+        st.write(result)

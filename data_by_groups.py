@@ -27,8 +27,35 @@ def user_input():
                                                                             "num_fairs", 
                                                                             "Alignment",
                                                                               "Career Readiness"])
-    visual = st.sidebar.selectbox("Which Visual do you want to see?", ["Bar Chart", "Percentiles", "Table"], key='visual')
+    visual = st.sidebar.selectbox("Which Visual do you want to see?", ["Overview", "Bar Chart", "Percentiles", "Table"], key='visual')
     
+
+
+    if visual == "Overview":
+        # Make unified num_internships column
+        handshake_data['num_internships'] = pd.concat([handshake_data['Number of Internships_fds_2023'], handshake_data['Number of Internships'], handshake_data['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'], 
+                                                handshake_data['If you participated in internships, how many internships did you have while attending the University of Virginia?_fds_2022']], ignore_index=True)
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        counts = handshake_data['num_internships'].value_counts()
+        percentages = handshake_data['num_internships'].value_counts(normalize=True) * 100
+        percentages.plot(kind='bar', ax=ax, width=.8)
+        # Add labels, title, and legend
+        ax.set_xlabel('Number of Internships by UVA Student')
+        ax.set_ylabel(f'Percent of Students')
+        ax.set_title(f'UVA Class of 2021-2024 Percent of Students with 0, 1, 2, 3+ internships')
+        ax.grid(True)
+        st.write(sum(counts.values))
+        label = sum(counts.values)
+         # Add values on the bars
+        for container in ax.containers:
+            labels = [f"{v:.2f}%" for v in container.datavalues]  # Format values with '%'
+            ax.bar_label(container, labels=labels, padding=3)
+        ax.legend(title=f"Among {label} UVA Graduates 2021-2024" , bbox_to_anchor=(1, 1), framealpha=.5) 
+        st.pyplot(fig)
+        
+
+
     if visual == "Bar Chart":
         avg_stat = st.sidebar.selectbox("Which Stat do you want to see?", ["mean", "median"])
         def bar_chart(poi_stats, counts):

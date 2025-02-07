@@ -24,7 +24,7 @@ elif topic == 'Internship Impact':
 elif topic == 'State Retention Data':
     st.write(-2)
 elif topic == 'IPP Data':
-    #exec(open('IPP_Data.py').read())
+    exec(open('IPP_Data.py').read())
     st.write(-1)
 elif topic == 'Internships By Major':
     majors.user_input()

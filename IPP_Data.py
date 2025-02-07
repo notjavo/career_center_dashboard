@@ -4,19 +4,13 @@ import streamlit as st
 
 data = pd.read_csv('streamlit_data_anonymous.csv')
 
-# Explode the 'time of IPP' column to flatten lists into individual rows
-time_of_ipp_df = data['time of IPP'].explode().reset_index(drop=True)
-
-# Convert to a single-column DataFrame
-time_of_ipp_df = time_of_ipp_df.to_frame()
-
 # Display the resulting DataFrame
-st.write(time_of_ipp_df)
 data['time of IPP'] = data['time of IPP'].apply(lambda x: x[0] if isinstance(x, list) else x)
-time_of_ipp_df['time of IPP'] = time_of_ipp_df['time of IPP'].astype('category')
+df = pd.DataFrame({'time of IPP': [data['time of IPP'].dropna().tolist()]})
+df['time of IPP'] = df['time of IPP'].astype('category')
 
 # Optionally, reorder categories if needed
-time_of_ipp_df['time of IPP'] = time_of_ipp_df['time of IPP'].cat.set_categories([
+df['time of IPP'] = df['time of IPP'].cat.set_categories([
     ['AY 19-20'], ['AY 20-21'], ['AY 21-22'], ['Fall 22'], ['Fall 23'], 
      ['Spring 2020'], ['Spring 2021'], ['Spring 22'], ['Spring 23'], ['Spring 24'], 
      ['Summer 2020'], ['Summer 2021'], ['Summer 22'], ['Summer 23']],
@@ -25,10 +19,10 @@ time_of_ipp_df['time of IPP'] = time_of_ipp_df['time of IPP'].cat.set_categories
 
 
 
-
+st.write(df)
 
 # Set up Plotting Data
-mybars = time_of_ipp_df['time of IPP'].value_counts().sort_index()
+mybars = df['time of IPP'].value_counts().sort_index()
 plt.figure(figsize=(10, 6))
 # Create a color list with the desired repetitions
 colors = ['Navy']*3 + ['red']*2 + ['green']*5 + ['orange']*4  # Adjust the numbers as needed
