@@ -10,13 +10,14 @@ st.set_page_config(layout="wide")  # Enables wider layout but not forced full wi
 st.sidebar.title('UVA Career Center Data')
 topic = st.radio(
     'What UVA Career Center Data Do you Want to Explore? ',
-    ['Data by School/Groups', 'First Gen Data', 'Internship Impact', 'Internships By Major', 'State Retention Data', 'IPP Data'], horizontal=True)
+    ['Trends by School at UVA', 'Internship Impact','Internships By Major', 
+     'First Generation Students','State Retention Data', 'IPP Data'], horizontal=True)
 
 
 # Call other scripts based on user input
-if topic == 'Data by School/Groups':
+if topic == 'Trends by School at UVA':
     data_by_groups.user_input() 
-elif topic == 'First Gen Data':
+elif topic == 'First Generation Students':
     first_gen.user_input() 
 elif topic == 'Internship Impact':
     exec(open('internship_impact_model.py').read())

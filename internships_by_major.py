@@ -4,18 +4,6 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 
-def get_parameters():
-    # User Input / Sorting
-    sort_option = st.sidebar.selectbox("Sort By ___ Internship Group", agg_stats.columns[0:4])  
-    sort_order = st.sidebar.radio("Sort order:", ["Ascending", "Descending"]) 
-    ascending = sort_order == "Ascending"  # Convert to Boolean for sorting
-    min_students = st.sidebar.slider("Show Majors with at least ____ Respondents 2021-2024", 0, 100, 60)
-    chart_option = st.sidebar.radio("Show Counts or Percent of Students?", ["Counts", "Percents"])
-    
-    return sort_option, ascending, min_students, chart_option
-
-
-
 def page_choice():
     # Read in the Data
     majors_data = pd.read_csv('streamlit_data_anonymous.csv', low_memory=False)
@@ -58,26 +46,26 @@ def page_choice():
     agg_stats['Total Students'] = agg_stats.iloc[:, 0:4].sum(axis=1)
     
     # Streamlit user input
-    user_choice = st.sidebar.selectbox('How do you want to see By Major Internship Data?', ['By specific Major', 'Sorted by Best/Worst'])
+    user_choice = st.sidebar.selectbox('How do you want to see By Major Internship Data?', ['Sorted by Best/Worst', 'By specific Major', ])
 
 
-    def get_parameters():
+    def get_parameters(agg_stats):
         # User Input / Sorting
         sort_option = st.sidebar.selectbox("Sort By ___ Internship Group", agg_stats.columns[0:4])  
         sort_order = st.sidebar.radio("Sort order:", ["Ascending", "Descending"]) 
         ascending = sort_order == "Ascending"  # Convert to Boolean for sorting
-        chart_option = st.sidebar.radio("Show Counts or Percent of Students?", ["Counts", "Percents"])
+        chart_option = st.sidebar.radio("Show Counts or Percent of Students?", ["Counts", "Percent"])
     
         return sort_option, ascending, chart_option
 
 
-    def plot_chart():
+    def plot_chart(plot_df, result, chart_option):
          # heatmap code
         plt.figure(figsize=(8,6))
         sns.heatmap(plot_df, annot=True, cmap="Blues", linewidths=0.5,  
-                    cbar_kws={'label': f"{chart_option} of UVA 2021-2024 Grads with different Number(s) of Internships by Major"})
+                    cbar_kws={'label': f"{chart_option} of UVA 2021-2024 Grads by Major", 'orientation': 'horizontal'})
         plt.title(f"{chart_option} of Students by Major")  # Set title separately
-        plt.xlabel("Num Internships")
+        plt.xlabel("Number of Internships")
         plt.ylabel("Major")
         plt.show()
         # Display the plot in Streamlit
@@ -86,7 +74,23 @@ def page_choice():
         st.write(result)
 
 
-    if user_choice  == 'By specific Major':
+    if user_choice == 'Sorted by Best/Worst':
+        # Call function to get user-parameters
+        sort_option, ascending, chart_option = get_parameters(agg_stats)
+        min_students = st.sidebar.slider("Show Majors with at least ____ Respondents 2021-2024", 0, 100, 60)
+        
+        # Filtered Data Frame
+        result = agg_stats[agg_stats['Total Students']>=min_students].sort_values(by=sort_option, ascending=ascending) # Show Highest First
+
+        # Save by count and percent df's
+        if chart_option == 'Counts':
+            plot_df = result.iloc[:, 0:4]
+        else:
+            plot_df = result.iloc[:, 4:-1] # Percents
+
+        plot_chart(plot_df, result, chart_option)
+
+    elif user_choice  == 'By specific Major':
         # Call function to get user-parameter
         majors = st.multiselect('Which Majors do you want to see majors_data for?', ['African-American & African Studies',
             'American Studies - Interdisciplinary', 'Anthropology',
@@ -140,27 +144,10 @@ def page_choice():
             [ 'Engineering - Aerospace Engineering',
             'Engineering - Biomedical Engineering',
             'Data Science'])
-        sort_option, ascending, chart_option = get_parameters()
+        sort_option, ascending, chart_option = get_parameters(agg_stats)
 
         #Filtered Data Frame
         result = agg_stats[(agg_stats['Total Students']>=0) & agg_stats.index.isin(majors)].sort_values(by=sort_option, ascending=ascending) # Show Highest First
-
-       # Save by count and percent df's
-        if chart_option == 'Counts':
-            plot_df = result.iloc[:, 0:4]
-        else:
-            plot_df = result.iloc[:, 4:-1] # Percents
-
-        plot_chart(plot_df, result, chart_option)
-
-
-    elif user_choice == 'Sorted by Best/Worst':
-        # Call function to get user-parameters
-        sort_option, ascending, chart_option = get_parameters()
-        min_students = st.sidebar.slider("Show Majors with at least ____ Respondents 2021-2024", 0, 100, 60)
-        
-        # Filtered Data Frame
-        result = agg_stats[agg_stats['Total Students']>=min_students].sort_values(by=sort_option, ascending=ascending) # Show Highest First
 
         # Save by count and percent df's
         if chart_option == 'Counts':

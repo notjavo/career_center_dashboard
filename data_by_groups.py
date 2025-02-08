@@ -45,7 +45,6 @@ def user_input():
         ax.set_ylabel(f'Percent of Students')
         ax.set_title(f'UVA Class of 2021-2024 Percent of Students with 0, 1, 2, 3+ internships')
         ax.grid(True)
-        st.write(sum(counts.values))
         label = sum(counts.values)
          # Add values on the bars
         for container in ax.containers:
