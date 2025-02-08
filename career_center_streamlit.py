@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
-import first_gen, data_by_groups, majors
+import first_gen, data_by_groups, internships_by_major
 
 st.set_page_config(layout="wide")  # Enables wider layout but not forced full width
 
@@ -21,7 +21,7 @@ elif topic == 'First Gen Data':
 elif topic == 'Internship Impact':
     exec(open('internship_impact_model.py').read())
 elif topic == 'Internships By Major':
-    majors.user_input()
+    internships_by_major.page_choice()
 elif topic == 'State Retention Data':
     st.write(-2)
 elif topic == 'IPP Data':
