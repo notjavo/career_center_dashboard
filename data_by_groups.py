@@ -7,7 +7,16 @@ handshake_data = pd.read_csv('streamlit_data_anonymous.csv', low_memory=False) #
 
 # Function to take user defined input and display data based on this input
 def user_input():
-    schools = st.multiselect("Which College Do you want to see data for ?", [   "All",
+    visual = st.sidebar.selectbox("Which Visual do you want to see?", ["Overview", "Bar Chart", "Percentiles", "Table"], key='visual')
+    point_of_interest = st.sidebar.selectbox("Which Metric do you want to see?", ["Job Applications", 
+                                                                          "Internship Applications",
+                                                                          "num_events_checked_in",
+                                                                          "num_events_signed_up",
+                                                                          "num_appointments",
+                                                                            "num_fairs", 
+                                                                            "Alignment",
+                                                                              "Career Readiness"])
+    schools = st.sidebar.multiselect("Which College Do you want to see data for ?", [   "All",
                                                                                 "College and Graduate School of Arts & Sciences",                                                                            
                                                                                 "School of Engineering & Applied Science",           
                                                                                 "School of Architecture",                             
@@ -19,15 +28,6 @@ def user_input():
                                                                                 "Darden Graduate School of Business Administration"],
                                                                                 ["College and Graduate School of Arts & Sciences",                                                                            
                                                                                 "School of Engineering & Applied Science" ] )
-    visual = st.sidebar.selectbox("Which Visual do you want to see?", ["Overview", "Bar Chart", "Percentiles", "Table"], key='visual')
-    point_of_interest = st.sidebar.selectbox("Which Metric do you want to see?", ["Job Applications", 
-                                                                          "Internship Applications",
-                                                                          "num_events_checked_in",
-                                                                          "num_events_signed_up",
-                                                                          "num_appointments",
-                                                                            "num_fairs", 
-                                                                            "Alignment",
-                                                                              "Career Readiness"])
     
     
 
@@ -80,30 +80,34 @@ def user_input():
         ax.grid(True)
         st.pyplot(fig)
 
-        first_gen_crosstab = (pd.crosstab(data['num_internships'], data['First Gen'],
-                                            normalize='index') * 100).round(2)
-
-        summary_stats = data.groupby('num_internships')[['Job Applications', 
+        # Demographics of Students in Visual
+        st.subheader('Demographics of Students in Visual')
+        summary_stats = data.groupby('num_internships')[['First Gen',
+                                                         'Alignment',
+                                                         'Career Readiness',
+                                                         'Job Applications', 
                                                         'Internship Applications',
                                                         'num_fairs',
-                                                        'num_events_signed_up']].mean()
+                                                        'num_events_signed_up'
+                                                        ]].mean()
+        summary_stats['First Gen (%)'] = (summary_stats.pop('First Gen') * 100).round(2) # Change column name and porportion -> Percentage
+        summary_stats = summary_stats.T
+        summary_stats = summary_stats.applymap(lambda x: f"{x:.2f}")
         st.table(summary_stats)
-        # Display using Streamlit
-        st.table(first_gen_crosstab)
-        
+
         # Download the Data
+        st.subheader('Download Subset of Student Data in Visual')
         st.download_button(
-            label="🔥 Download this Data! 🔥",
+            label="🔥 Download this Data!🔥",
             data=data.to_csv(index=False).encode('utf-8'), # Convert to CSV
             file_name=f'{visual}.csv', # filename based on userinput
             mime="text/csv", # tells browser it's a csv
-            help="Click to download data for this plot as CSV!")
-
-        st.write("Overview of data to Download", data.head())
-
-        # File uploader
-        uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
-
+            help="Click to download data of students in this plot as CSV!")
+        st.write('Rows:', data.shape[0], "Columns", data.shape[1], data.head(5))
+        
+        st.write(' ', ' ', ' ', ' ')
+        # Upload New Data
+        uploaded_file = st.file_uploader("Add Data to Dashboard", type="csv")
         if uploaded_file is not None:
             df = pd.read_csv(uploaded_file)
             st.write("Preview of uploaded file:")
