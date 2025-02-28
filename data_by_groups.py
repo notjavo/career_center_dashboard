@@ -19,6 +19,7 @@ def user_input():
                                                                                 "Darden Graduate School of Business Administration"],
                                                                                 ["College and Graduate School of Arts & Sciences",                                                                            
                                                                                 "School of Engineering & Applied Science" ] )
+    visual = st.sidebar.selectbox("Which Visual do you want to see?", ["Overview", "Bar Chart", "Percentiles", "Table"], key='visual')
     point_of_interest = st.sidebar.selectbox("Which Metric do you want to see?", ["Job Applications", 
                                                                           "Internship Applications",
                                                                           "num_events_checked_in",
@@ -27,31 +28,87 @@ def user_input():
                                                                             "num_fairs", 
                                                                             "Alignment",
                                                                               "Career Readiness"])
-    visual = st.sidebar.selectbox("Which Visual do you want to see?", ["Overview", "Bar Chart", "Percentiles", "Table"], key='visual')
+    
     
 
 
     if visual == "Overview":
         # Make unified num_internships column
-        handshake_data['num_internships'] = pd.concat([handshake_data['Number of Internships_fds_2023'], handshake_data['Number of Internships'], handshake_data['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'], 
+        handshake_data['num_internships'] = pd.concat([handshake_data['Number of Internships'],
+                                                handshake_data['Number of Internships_fds_2023'], 
+                                                handshake_data['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'], 
                                                 handshake_data['If you participated in internships, how many internships did you have while attending the University of Virginia?_fds_2022']], ignore_index=True)
-        
-        fig, ax = plt.subplots(figsize=(10, 6))
+        # Compute counts and percentages
         counts = handshake_data['num_internships'].value_counts()
         percentages = handshake_data['num_internships'].value_counts(normalize=True) * 100
-        percentages.plot(kind='bar', ax=ax, width=.8)
-        # Add labels, title, and legend
+        
+        # # Create the Plotly bar chart
+        # fig = px.bar(
+        #     data,
+        #     x = percentages.index,
+        #     y = percentages.values,
+        #     text=counts.values,  # Adds counts as text inside bars
+        #     hover_data={data['First Gen']: True,},  # Shows count & percentage on hover
+        #     labels={'num_internships': 'Number of Internships', 'percent': 'Percent of Students'},
+        #     title='UVA Class of 2021-2024 Percent of Students with 0, 1, 2, 3+ Internships',
+        #     color='num_internships',  # Adds a color scale
+        # )
+
+        # # Customize layout
+        # fig.update_traces(textposition='outside')
+        # fig.update_layout(
+        #     xaxis_title="Number of Internships by UVA Student",
+        #     yaxis_title="Percent of Students",
+        #     showlegend=False
+        # )
+
+        # # Display plot in Streamlit
+        # st.plotly_chart(fig)
+
+
+        data = handshake_data[handshake_data['num_internships'].notnull()]
+        fig, ax = plt.subplots(figsize=(10, 6))
+        # Plot the bar chart
+        bars = ax.bar(percentages.index, percentages.values, width=0.8)
+
+        # Add labels on top of bars (percentages)
+        ax.bar_label(bars, labels=[f"{v:.2f}%" for v in percentages.values], padding=3)
         ax.set_xlabel('Number of Internships by UVA Student')
         ax.set_ylabel(f'Percent of Students')
         ax.set_title(f'UVA Class of 2021-2024 Percent of Students with 0, 1, 2, 3+ internships')
+        ax.legend(title=f"Among {len(data)} UVA Graduates 2021-2024" , bbox_to_anchor=(1, 1), framealpha=.5) 
         ax.grid(True)
-        label = sum(counts.values)
-         # Add values on the bars
-        for container in ax.containers:
-            labels = [f"{v:.2f}%" for v in container.datavalues]  # Format values with '%'
-            ax.bar_label(container, labels=labels, padding=3)
-        ax.legend(title=f"Among {label} UVA Graduates 2021-2024" , bbox_to_anchor=(1, 1), framealpha=.5) 
         st.pyplot(fig)
+
+        first_gen_crosstab = (pd.crosstab(data['num_internships'], data['First Gen'],
+                                            normalize='index') * 100).round(2)
+
+        summary_stats = data.groupby('num_internships')[['Job Applications', 
+                                                        'Internship Applications',
+                                                        'num_fairs',
+                                                        'num_events_signed_up']].mean()
+        st.table(summary_stats)
+        # Display using Streamlit
+        st.table(first_gen_crosstab)
+        
+        # Download the Data
+        st.download_button(
+            label="🔥 Download this Data! 🔥",
+            data=data.to_csv(index=False).encode('utf-8'), # Convert to CSV
+            file_name=f'{visual}.csv', # filename based on userinput
+            mime="text/csv", # tells browser it's a csv
+            help="Click to download data for this plot as CSV!")
+
+        st.write("Overview of data to Download", data.head())
+
+        # File uploader
+        uploaded_file = st.file_uploader("Choose a CSV file", type="csv")
+
+        if uploaded_file is not None:
+            df = pd.read_csv(uploaded_file)
+            st.write("Preview of uploaded file:")
+            st.dataframe(df)
+
         
 
 

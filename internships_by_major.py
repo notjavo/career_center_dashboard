@@ -63,7 +63,7 @@ def page_choice():
          # heatmap code
         plt.figure(figsize=(8,6))
         sns.heatmap(plot_df, annot=True, cmap="Blues", linewidths=0.5,  
-                    cbar_kws={'label': f"{chart_option} of UVA 2021-2024 Grads by Major", 'orientation': 'horizontal'})
+                    cbar_kws={'label': "Percent of UVA 2021-2024 Grads by Major", 'orientation': 'horizontal'})
         plt.title(f"{chart_option} of Students by Major")  # Set title separately
         plt.xlabel("Number of Internships")
         plt.ylabel("Major")
