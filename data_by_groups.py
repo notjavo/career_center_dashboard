@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
@@ -6,71 +5,43 @@ import matplotlib.pyplot as plt
 handshake_data = pd.read_csv('streamlit_data_anonymous.csv', low_memory=False) # Read in app Count data
 
 # Function to take user defined input and display data based on this input
-def user_input():
+def main():
     visual = st.sidebar.selectbox("Which Visual do you want to see?", ["Overview", "Bar Chart", "Percentiles", "Table"], key='visual')
-    point_of_interest = st.sidebar.selectbox("Which Metric do you want to see?", ["Job Applications", 
-                                                                          "Internship Applications",
-                                                                          "num_events_checked_in",
-                                                                          "num_events_signed_up",
-                                                                          "num_appointments",
-                                                                            "num_fairs", 
-                                                                            "Alignment",
-                                                                              "Career Readiness"])
-    schools = st.sidebar.multiselect("Which College Do you want to see data for ?", [   "All",
-                                                                                "College and Graduate School of Arts & Sciences",                                                                            
-                                                                                "School of Engineering & Applied Science",           
-                                                                                "School of Architecture",                             
-                                                                                "School of Education and Human Development",          
-                                                                                "School of Data Science",                             
-                                                                                "School of Nursing",                                  
-                                                                                "School of Continuing and Professional Studies",      
-                                                                                "School of Medicine",                                 
-                                                                                "Darden Graduate School of Business Administration"],
-                                                                                ["College and Graduate School of Arts & Sciences",                                                                            
-                                                                                "School of Engineering & Applied Science" ] )
-    
-    
+    point_of_interest = st.sidebar.selectbox("Which Metric do you want to see?", ["Job Applications", "Internship Applications",
+                                                                          "num_events_checked_in", "num_events_signed_up", "num_appointments", "num_fairs", 
+                                                                            "Alignment", "Career Readiness"])
+    def schools():
+        schools = st.sidebar.multiselect("Which College Do you want to see data for ?", 
+                                         ["All",
+                                         "College and Graduate School of Arts & Sciences",                                                                            
+                                         "School of Engineering & Applied Science",           
+                                         "School of Architecture",                             
+                                         "School of Education and Human Development",          
+                                         "School of Data Science",                             
+                                         "School of Nursing",                                  
+                                         "School of Continuing and Professional Studies",      
+                                         "School of Medicine",                                 
+                                         "Darden Graduate School of Business Administration"],
+                                        ["College and Graduate School of Arts & Sciences", "School of Engineering & Applied Science" ] ) # Set initial Schools
+        return schools
 
 
     if visual == "Overview":
         # Make unified num_internships column
-        handshake_data['num_internships'] = pd.concat([handshake_data['Number of Internships'],
+        handshake_data['num_internships'] = pd.concat([handshake_data['Number of Internships'],  # 2024 
+                                                       handshake_data['num_internships_from_plans'], # plans only
                                                 handshake_data['Number of Internships_fds_2023'], 
-                                                handshake_data['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'], 
-                                                handshake_data['If you participated in internships, how many internships did you have while attending the University of Virginia?_fds_2022']], ignore_index=True)
+                                                 handshake_data['If you participated in internships, how many internships did you have while attending the University of Virginia?_fds_2022'],
+                                                handshake_data['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021']],
+                                                ignore_index=True)
         # Compute counts and percentages
         counts = handshake_data['num_internships'].value_counts()
         percentages = handshake_data['num_internships'].value_counts(normalize=True) * 100
+        data = handshake_data[handshake_data['num_internships'].notnull()] # Only look at data with Internship Counts
         
-        # # Create the Plotly bar chart
-        # fig = px.bar(
-        #     data,
-        #     x = percentages.index,
-        #     y = percentages.values,
-        #     text=counts.values,  # Adds counts as text inside bars
-        #     hover_data={data['First Gen']: True,},  # Shows count & percentage on hover
-        #     labels={'num_internships': 'Number of Internships', 'percent': 'Percent of Students'},
-        #     title='UVA Class of 2021-2024 Percent of Students with 0, 1, 2, 3+ Internships',
-        #     color='num_internships',  # Adds a color scale
-        # )
-
-        # # Customize layout
-        # fig.update_traces(textposition='outside')
-        # fig.update_layout(
-        #     xaxis_title="Number of Internships by UVA Student",
-        #     yaxis_title="Percent of Students",
-        #     showlegend=False
-        # )
-
-        # # Display plot in Streamlit
-        # st.plotly_chart(fig)
-
-
-        data = handshake_data[handshake_data['num_internships'].notnull()]
-        fig, ax = plt.subplots(figsize=(10, 6))
         # Plot the bar chart
+        fig, ax = plt.subplots(figsize=(10, 6))
         bars = ax.bar(percentages.index, percentages.values, width=0.8)
-
         # Add labels on top of bars (percentages)
         ax.bar_label(bars, labels=[f"{v:.2f}%" for v in percentages.values], padding=3)
         ax.set_xlabel('Number of Internships by UVA Student')
@@ -82,17 +53,17 @@ def user_input():
 
         # Demographics of Students in Visual
         st.subheader('Demographics of Students in Visual')
-        summary_stats = data.groupby('num_internships')[['First Gen',
-                                                         'Alignment',
-                                                         'Career Readiness',
-                                                         'Job Applications', 
-                                                        'Internship Applications',
-                                                        'num_fairs',
-                                                        'num_events_signed_up'
+        data['Athlete_fds_2024'] = data['Athlete_fds_2024'].replace({'Yes': True, 'TRUE': True , 'FALSE': False, 'No': False})
+        data['Gender_fds_2024'] = data['Gender_fds_2024'].replace({'Male': True, 'Female': False})
+
+        summary_stats = data.groupby('num_internships')[['First Gen', 'Alignment', 'Career Readiness',
+                                                         'Job Applications', 'Internship Applications', 'num_fairs', 'num_events_signed_up',
+                                                         'Athlete_fds_2024' ,'Gender_fds_2024', #'Education Level_fds_2024'
                                                         ]].mean()
         summary_stats['First Gen (%)'] = (summary_stats.pop('First Gen') * 100).round(2) # Change column name and porportion -> Percentage
-        summary_stats = summary_stats.T
-        summary_stats = summary_stats.applymap(lambda x: f"{x:.2f}")
+        summary_stats['Athlete (%)'] = (summary_stats.pop('Athlete_fds_2024') * 100).round(2)
+        summary_stats['Male (%)'] = (summary_stats.pop('Gender_fds_2024') * 100).round(2)
+        summary_stats = summary_stats.applymap(lambda x: f"{x:.2f}").T
         st.table(summary_stats)
 
         # Download the Data
@@ -103,9 +74,10 @@ def user_input():
             file_name=f'{visual}.csv', # filename based on userinput
             mime="text/csv", # tells browser it's a csv
             help="Click to download data of students in this plot as CSV!")
-        st.write('Rows:', data.shape[0], "Columns", data.shape[1], data.head(5))
+        st.write('Rows:',data.shape[0], "Columns", data.shape[1], data.head(3))
+    
         
-        st.write(' ', ' ', ' ', ' ')
+        st.subheader('Feed New Data To Dashboard')
         # Upload New Data
         uploaded_file = st.file_uploader("Add Data to Dashboard", type="csv")
         if uploaded_file is not None:
@@ -113,10 +85,9 @@ def user_input():
             st.write("Preview of uploaded file:")
             st.dataframe(df)
 
-        
 
-
-    if visual == "Bar Chart":
+    elif visual == "Bar Chart":
+        schools = schools()
         avg_stat = st.sidebar.selectbox("Which Stat do you want to see?", ["mean", "median"])
         def bar_chart(poi_stats, counts):
             # Plotting Bar Chart for point_of interest
@@ -154,6 +125,7 @@ def user_input():
 
 
     elif visual == "Percentiles":
+        schools = schools()
         handshake_data[point_of_interest] = handshake_data[point_of_interest].fillna(0)
 
         def generate_percentiles():
@@ -180,7 +152,6 @@ def user_input():
             # Displaying the plot in Streamlit
             st.pyplot(fig1)
 
-
         if schools == ['All']:
             percentiles = generate_percentiles() # User generated percentiles
             poi_percentiles = handshake_data[point_of_interest].quantile(percentiles).to_frame().T
@@ -193,8 +164,11 @@ def user_input():
 
 
     elif visual == "Table":
+        schools = schools()
         for school in schools:
             visual = handshake_data[handshake_data['College_fds_2024'] == school].groupby([ 'College_fds_2024', 'Number of Internships',])[point_of_interest] \
                                                                     .agg(['mean', 'median', 'std', 'min', 'max','count']).round(2)
             st.write(f"{point_of_interest} for {school} 2024 graduates by Number of Internships")
             st.write(visual)
+    else:
+        print('error')

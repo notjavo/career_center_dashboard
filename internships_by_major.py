@@ -16,15 +16,14 @@ def page_choice():
     # Get number of students by major and number of internships
     aggregated_majors = majors_data.groupby('Major')['num_internships'].value_counts().unstack(fill_value=0)
     
-    # Incorrect way
-    st.subheader(f"Getting count by major using: 'majors_data.groupby('Major')['num_internships'].size()'")
-    st.write('If a person has `Major` filled out but `num_internships` as NaN, they are still counted.')
-    st.write(majors_data.groupby('Major')['num_internships'].size())
+    # # Incorrect way
+    # st.subheader(f"Getting count by major using: 'majors_data.groupby('Major')['num_internships'].size()'")
+    # st.write('If a person has `Major` filled out but `num_internships` as NaN, they are still counted.')
+    # st.write(majors_data.groupby('Major')['num_internships'].size())
 
-    # Correct way
-    st.subheader(f"Getting internship count by major using: majors_data.groupby('Major')['num_internships'].value_counts()'")
-    st.write(majors_data.groupby('Major')['num_internships'].value_counts())
-    
+    # # Correct way
+    # st.subheader(f"Getting internship count by major using: majors_data.groupby('Major')['num_internships'].value_counts()'")
+    # st.write(majors_data.groupby('Major')['num_internships'].value_counts())
     ## Proving counts of major/internship respondents by year
     # counts1 = majors_data.groupby('Recipient Primary Majors_fds_2021')['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'].value_counts()
     # counts2 = majors_data.groupby('Recipient Primary Majors_fds_2021')['How many internships (summer and/or academic year) did you have while attending the University of Virginia?_fds_2021'].size()
@@ -52,8 +51,8 @@ def page_choice():
     def get_parameters(agg_stats):
         # User Input / Sorting
         sort_option = st.sidebar.selectbox("Sort By ___ Internship Group", agg_stats.columns[0:4])  
-        sort_order = st.sidebar.radio("Sort order:", ["Ascending", "Descending"]) 
-        ascending = sort_order == "Ascending"  # Convert to Boolean for sorting
+        sort_order = st.sidebar.radio("Sort order:", ["Descending", "Ascending"]) 
+        ascending = sort_order == "Descending"  # Convert to Boolean for sorting
         chart_option = st.sidebar.radio("Show Counts or Percent of Students?", ["Counts", "Percent"])
     
         return sort_option, ascending, chart_option
