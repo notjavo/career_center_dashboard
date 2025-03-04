@@ -51,20 +51,38 @@ def main():
         ax.grid(True)
         st.pyplot(fig)
 
-        # Demographics of Students in Visual
-        st.subheader('Demographics of Students in Visual')
         data['Athlete_fds_2024'] = data['Athlete_fds_2024'].replace({'Yes': True, 'TRUE': True , 'FALSE': False, 'No': False})
-        data['Gender_fds_2024'] = data['Gender_fds_2024'].replace({'Male': True, 'Female': False})
+        first_gen_cross = (data.groupby('First Gen')['num_internships'].value_counts(normalize=True).unstack(fill_value=0) * 100).round(2)
+        male_cross = (data.groupby('Gender_fds_2024')['num_internships'].value_counts(normalize=True).unstack(fill_value=0) * 100).round(2)
+        athlete_cross = (data.groupby('Athlete_fds_2024')['num_internships'].value_counts(normalize=True).unstack(fill_value=0) * 100).round(2)
+        first_gen_cross['Total'] = '100 %'
+        male_cross['Total'] = '100 %'
+        st.subheader('Percent within a given Demographic having 0, 1, 2 or 3+ Internships')
+        st.write(first_gen_cross.round(2))
+        st.write(male_cross.round(2))
+        st.write(athlete_cross)
+       
 
-        summary_stats = data.groupby('num_internships')[['First Gen', 'Alignment', 'Career Readiness',
-                                                         'Job Applications', 'Internship Applications', 'num_fairs', 'num_events_signed_up',
-                                                         'Athlete_fds_2024' ,'Gender_fds_2024', #'Education Level_fds_2024'
+        data['Gender_fds_2024'] = data['Gender_fds_2024'].replace({'Male': True, 'Female': False})
+        # Demographics of Students in Visual 
+        demo_stats = data.groupby('num_internships')[['Athlete_fds_2024', 'Gender_fds_2024', 'First Gen']].mean()
+        # Change column name and porportion -> Percentage
+        demo_stats['First Generation Student (%)'] = (demo_stats['First Gen'] * 100).round(2) 
+        demo_stats['Non - First Generation Student (%)'] = ((1-demo_stats.pop('First Gen')) * 100).round(2) 
+        demo_stats['Female (%)'] = ((1 - demo_stats['Gender_fds_2024']) * 100).round(2)
+        demo_stats['Male (%)'] = (demo_stats.pop('Gender_fds_2024') * 100).round(2)
+        demo_stats['Athlete (%)'] = (demo_stats.pop('Athlete_fds_2024') * 100).round(2)
+        demo_stats = demo_stats.applymap(lambda x: f"{x:.2f}").T # limit decimals and transpose
+        st.subheader('Demographics of Students by Internship Group') # output table 
+        st.table(demo_stats)
+        
+        career_stats = data.groupby('num_internships')[['Alignment', 'Career Readiness','Job Applications', 
+                                                         'Internship Applications', 'num_fairs', 'num_events_signed_up'
                                                         ]].mean()
-        summary_stats['First Gen (%)'] = (summary_stats.pop('First Gen') * 100).round(2) # Change column name and porportion -> Percentage
-        summary_stats['Athlete (%)'] = (summary_stats.pop('Athlete_fds_2024') * 100).round(2)
-        summary_stats['Male (%)'] = (summary_stats.pop('Gender_fds_2024') * 100).round(2)
-        summary_stats = summary_stats.applymap(lambda x: f"{x:.2f}").T
-        st.table(summary_stats)
+        career_stats = career_stats.applymap(lambda x: f"{x:.2f}").T # limit decimals and transpose
+        st.subheader('Career Statistics of Students by Internship Group') # output table 
+        st.table(career_stats)
+        
 
         # Download the Data
         st.subheader('Download Subset of Student Data in Visual')
