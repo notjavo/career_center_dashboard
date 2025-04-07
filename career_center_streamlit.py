@@ -1,7 +1,7 @@
-import numpy as np
-import pandas as pd
+# import numpy as np
+# import pandas as pd
 import streamlit as st
-import matplotlib.pyplot as plt
+#  import matplotlib.pyplot as plt
 import first_gen, data_by_groups, internships_by_major
 
 # Set page and Sidebar layout
