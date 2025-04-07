@@ -1,4 +1,7 @@
 import streamlit as st
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 
 # Set page and Sidebar layout
 st.set_page_config(layout="centered")  # Enables wider layout but not forced full width
@@ -28,7 +31,8 @@ elif topic == 'Internships By Major':
     internships_by_major.page_choice()
 
 elif topic == 'Internship Impact':
-    exec(open('internship_impact_model.py').read())
+    # exec(open('internship_impact_model.py').read())
+    st.write(-1)
 
 elif topic == 'State Retention Data':
     st.write(-2)
