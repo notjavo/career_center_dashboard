@@ -1,7 +1,4 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 
 # Set page and Sidebar layout
 st.set_page_config(layout="centered")  # Enables wider layout but not forced full width

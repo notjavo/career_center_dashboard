@@ -2,7 +2,10 @@ import pandas as pd
 import streamlit as st
 import matplotlib.pyplot as plt
 
-handshake_data = pd.read_csv('streamlit_data_anonymous.csv', low_memory=False) # Read in app Count data
+@st.cache_data
+def import_data():  
+    handshake_data = pd.read_csv('streamlit_data_anonymous.csv', low_memory=False) # Read in app Count data
+    return handshake_data
 
 # Function to take user defined input and display data based on this input
 def main():
@@ -94,15 +97,6 @@ def main():
             help="Click to download data of students in this plot as CSV!")
         st.write('Rows:',data.shape[0], "Columns", data.shape[1], data.head(3))
     
-        
-        st.subheader('Feed New Data To Dashboard')
-        # Upload New Data
-        uploaded_file = st.file_uploader("Add Data to Dashboard", type="csv")
-        if uploaded_file is not None:
-            df = pd.read_csv(uploaded_file)
-            st.write("Preview of uploaded file:")
-            st.dataframe(df)
-
 
     elif visual == "Bar Chart":
         schools = schools()
