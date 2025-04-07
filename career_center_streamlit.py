@@ -17,6 +17,7 @@ topic = st.radio(
 # Call other scripts based on user input
 if topic == 'Trends by School at UVA':
     import data_by_groups
+    data_by_groups.import_data()
     data_by_groups.main()
 
 elif topic == 'First Generation Students':
