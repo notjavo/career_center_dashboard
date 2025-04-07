@@ -9,6 +9,7 @@ def import_data():
 
 # Function to take user defined input and display data based on this input
 def main():
+    handshake_data = import_data()
     visual = st.sidebar.selectbox("Which Visual do you want to see?", ["Overview", "Bar Chart", "Percentiles", "Table"], key='visual')
     point_of_interest = st.sidebar.selectbox("Which Metric do you want to see?", ["Job Applications", "Internship Applications",
                                                                           "num_events_checked_in", "num_events_signed_up", "num_appointments", "num_fairs", 
