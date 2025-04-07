@@ -1,8 +1,4 @@
-# import numpy as np
-# import pandas as pd
 import streamlit as st
-#  import matplotlib.pyplot as plt
-import first_gen, data_by_groups, internships_by_major
 
 # Set page and Sidebar layout
 st.set_page_config(layout="centered")  # Enables wider layout but not forced full width
@@ -17,17 +13,26 @@ topic = st.radio(
      'State Retention Data', 'IPP Data'], horizontal=True)
 
 
+
 # Call other scripts based on user input
 if topic == 'Trends by School at UVA':
+    import data_by_groups
     data_by_groups.main()
+
 elif topic == 'First Generation Students':
-    first_gen.user_input() 
+    import first_gen
+    first_gen.user_input()
+
 elif topic == 'Internships By Major':
+    import internships_by_major
     internships_by_major.page_choice()
+
 elif topic == 'Internship Impact':
     exec(open('internship_impact_model.py').read())
+
 elif topic == 'State Retention Data':
     st.write(-2)
+
 elif topic == 'IPP Data':
     exec(open('IPP_Data.py').read())
     st.write(-1)
