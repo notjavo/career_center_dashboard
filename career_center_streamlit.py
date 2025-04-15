@@ -10,7 +10,7 @@ st.sidebar.image('uva.png', width=200, )  # Adjust the width as needed
 topic = st.radio(
     'What UVA Career Center Data Do you Want to Explore? ',
     ['Trends by School at UVA', 'Internships By Major', 'First Generation Students', 'Internship Impact', 
-     'State Retention Data', 'IPP Data'], horizontal=True)
+     'State Retention Data', 'IPP Data', 'Barriers'], horizontal=True)
 
 
 
@@ -38,3 +38,5 @@ elif topic == 'State Retention Data':
 elif topic == 'IPP Data':
     exec(open('IPP_Data.py').read())
     st.write(-1)
+elif topic =='Barriers':
+    exec(open('Barriers.py').read())
