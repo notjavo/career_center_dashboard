@@ -9,34 +9,34 @@ st.sidebar.title('UVA Career Center Data')
 st.sidebar.image('uva.png', width=200, )  # Adjust the width as needed
 topic = st.radio(
     'What UVA Career Center Data Do you Want to Explore? ',
-    ['Trends by School at UVA', 'Internships By Major', 'First Generation Students', 'Internship Impact', 
-     'State Retention Data', 'IPP Data', 'Barriers'], horizontal=True)
+    [':orange[Trends by School at UVA]', ':orange[Internships By Major]', ':orange[First Generation Students]', ':orange[Internship Impact]', 
+     ':rainbow[State Retention Data]', ':rainbow[IPP Data]', ':orange[Barriers]'], horizontal=True)
 
 
 
 # Call other scripts based on user input
-if topic == 'Trends by School at UVA':
+if topic == ':orange[Trends by School at UVA]':
     import data_by_groups
     data_by_groups.import_data()
     data_by_groups.main()
 
-elif topic == 'First Generation Students':
+elif topic == ':orange[First Generation Students]':
     import first_gen
     first_gen.user_input()
 
-elif topic == 'Internships By Major':
+elif topic == ':orange[Internships By Major]':
     import internships_by_major
     internships_by_major.page_choice()
 
-elif topic == 'Internship Impact':
+elif topic == ':orange[Internship Impact]':
     # exec(open('internship_impact_model.py').read())
     st.write(-1)
 
-elif topic == 'State Retention Data':
+elif topic == ':orange[State Retention Data]':
     st.write(-2)
 
-elif topic == 'IPP Data':
+elif topic == ':orange[IPP Data]':
     exec(open('IPP_Data.py').read())
     st.write(-1)
-elif topic =='Barriers':
+elif topic ==':orange[Barriers]':
     exec(open('Barriers.py').read())
