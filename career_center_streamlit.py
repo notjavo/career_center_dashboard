@@ -39,4 +39,4 @@ elif topic == ':orange[IPP Data]':
     exec(open('IPP_Data.py').read())
     st.write(-1)
 elif topic ==':orange[Barriers]':
-    exec(open('Barriers.py').read())
+    exec(open('barriers.py').read())
