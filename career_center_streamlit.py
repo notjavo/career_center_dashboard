@@ -9,8 +9,8 @@ st.sidebar.title('UVA Career Center Data')
 st.sidebar.image('uva.png', width=200, )  # Adjust the width as needed
 topic = st.radio(
     'What UVA Career Center Data Do you Want to Explore? ',
-    [':orange[Trends by School at UVA]', ':orange[Internships By Major]', ':orange[First Generation Students]', ':orange[Internship Impact]', 
-     ':rainbow[State Retention Data]', ':rainbow[IPP Data]', ':orange[Barriers]'], horizontal=True)
+    [':orange[Trends by School at UVA]', ':orange[Internships By Major]', ':orange[First Generation Students]', 
+     ':orange[Model]',  ':rainbow[State Retention Data]', ':orange[Barriers]'], horizontal=True)
 
 
 
@@ -28,8 +28,8 @@ elif topic == ':orange[Internships By Major]':
     import internships_by_major
     internships_by_major.page_choice()
 
-elif topic == ':orange[Internship Impact]':
-    exec(open('internship_impact_model.py').read())
+elif topic == ':orange[Model]':
+    #exec(open('internship_impact_model.py').read())
     st.write(-1)
 
 elif topic == ':orange[State Retention Data]':
